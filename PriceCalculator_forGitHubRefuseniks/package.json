@@ -1,0 +1,26 @@
+{
+  "name": "pricecalculator",
+  "version": "1.0.0",
+  "description": "Single page app for working out cost of a website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PamJohnston/PriceCalculator.git"
+  },
+  "keywords": [
+    "simple"
+  ],
+  "author": "Pam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PamJohnston/PriceCalculator/issues"
+  },
+  "homepage": "https://github.com/PamJohnston/PriceCalculator#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "path": "^0.12.7"
+  }
+}
