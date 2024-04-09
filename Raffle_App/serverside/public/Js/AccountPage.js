@@ -5,11 +5,8 @@ $(document).ready(function(){
     var warningScreen = document.getElementById("WarningScreen");
     var warningTitle = document.getElementById("WarningTitle");
     var messageInfo = document.getElementById("MessageInfo");
-    var status = document.getElementById("Status");
     var raffleTaken = $("#RaffleTaken");
-    var MyRaffle = $("#MyRaffle");
-    var CreateRaffle = $("#CreateRaffle");
-    var accountType = $('#LeftBox').data('account-type');
+    
     
 
     if (raffleTaken.css("visibility") === "visible") {
@@ -25,17 +22,20 @@ $(document).ready(function(){
         // When the button is clicked
     $('#CreateRaffle_btn').click(function() {
         // Show the CreateRaffle section and hide the MyRaffle section
-        $("#CreateRaffle").css("visibility", "visible");
-        $("#MyRaffle").css("visibility", "hidden");
-        $("#CreateRaffle_btn").css("visibility", "hidden");
+        $("#CreateRaffle").css("display", "block");
+        $("#MyRaffle").css("display", "none");
+        $("#CreateRaffle_btn").css("display", "none");
     });
 
     $('#DisplayRaffles').click(function() {
         // Show the MyRaffle section and hide the CreateRaffle section
-        $("#CreateRaffle").css("visibility", "hidden");
-        $("#MyRaffle").css("visibility", "visible");
-        $("#CreateRaffle_btn").css("visibility", "visible");
+        $("#CreateRaffle").css("display", "none");
+        $("#MyRaffle").css("display", "block");
+        $("#CreateRaffle_btn").css("display", "block");
     });
+
+
+    
 
 // Function which displays the message box with explanation on when the account
 // will be deleted and when it is recoverable
@@ -51,7 +51,6 @@ function deactivateAccount(){
    
    // Creating a button to exit anytime
    $("#ExitWarning").click(function() {
-    status.innerHTML = "Active"
     warningScreen.hidden = true;
     // if (($(warningMessage).find(deleteButton).length)) {
     //     // warningMessage.removeChild(yesInput);

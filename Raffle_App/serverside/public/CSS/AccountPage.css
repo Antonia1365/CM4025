@@ -83,13 +83,27 @@ font-weight: bold;
     box-shadow:  0 0.8vw 1vw 0 rgba(0, 0, 0, 0.089), 0 0.8vw 1vw 0 rgba(0, 0, 0, 0.164);
 }
 
-#LeftBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centers items horizontally */
-    justify-content: center; /* Centers items vertically */
+#MyRaffle {
+    max-height: 80%; /* Set a maximum height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+    text-align: left;
+    padding-right: 20%;
+  }
+
+  /* For WebKit browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 1vw; /* Width of the scrollbar */
 }
 
-.ContainerDetails {
-    margin-bottom: 10px; /* Adjust spacing between elements if needed */
+::-webkit-scrollbar-track {
+    background: #f1f1f100; /* Track color */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #073076; /* Thumb color */
+    border-radius: 6px; /* Border radius */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b5cdf8; /* Thumb color on hover */
 }

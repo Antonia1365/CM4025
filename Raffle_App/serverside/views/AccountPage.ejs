@@ -20,22 +20,24 @@
         <% include('partials/header'); %>
     </header>
 
-    <div id="LeftBox" class="mainBox">
+    <div id="LeftBox" class="mainBox" style= "display: flex; flex-direction: column; justify-content: center; align-items: center;" >
         <div id = "MyRaffle" class="ContainerDetails">
             <% if (raffles.length > 0) { %>
                 <% raffles.forEach(function(raffle) { %>
+                    <br>
                         <p>Raffle: <%= raffle.name %></p>
                         <p>Prize: <%= raffle.prize %></p>
-                        <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>
-                        
+                        <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>         
                     
                 <% }); %>
             <% } else { %>
                 <p>No raffles available</p>
             <% } %>
+            
         </div>
+        <button id="CreateRaffle_btn" class="submit" type="submit">Create a Raffle</button>
         
-            <div id = "CreateRaffle" class="ContainerDetails" style="visibility: hidden;">
+            <div id = "CreateRaffle" class="ContainerDetails" style="display: none;" >
                 <form action="/createRaffle" method="POST">
                     <input class="createForms"  type="text" name="name" placeholder="Raffle Name (up to 10 chars)" maxlength="10" pattern="[a-zA-Z0-9]{1,10}" required>
                     <input class="createForms" type="text" name="prize" placeholder="Prize (in £, up to 10 digits)" pattern="\d{1,10}" required>
@@ -47,7 +49,7 @@
                 
             </div>
         
-            <button id="CreateRaffle_btn" class="submit" type="submit">Create a Raffle</button>
+            
         <!-- Define hidden message divs -->
         <% if (locals.errors) { %>
             <div id="RaffleTaken" class="HintBox" style="visibility: visible;">
@@ -81,7 +83,7 @@
         <% if (account.AccountType === 'Raffle Participant') { %>
             <p>Unclaimed Prizes: 0</p>
         <% } else if (account.AccountType === 'Raffle Holder') { %>
-            <p>Raffles Held: <%= account.RafflesHeld || 0 %></p>
+            <p>Raffles Held: <%= raffles.length || 0 %></p>
         <% } %>
         </div>
 <!--------------------------- Buttons for account deletion/ recovery ----------------->
