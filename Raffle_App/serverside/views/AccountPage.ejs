@@ -7,6 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="../Js/NavBar.js"></script>
     <script src="../Js/LoginPage.js"></script>
+    <script src="../Js/AccountPage.js"></script>
     <script src="../Js/FooterLinks.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
@@ -18,12 +19,18 @@
         <% include('partials/header'); %>
     </header>
 
-    <div id="LeftBox" class="mainBox">
-        <div id="RaffleDetails" class="ContainerDetails">
-            <p>Raffle Details</p>
-            <p>Prize: $100</p>
-            <p>Date of Draw: May 15, 2024</p>
-        </div>
+<div id="LeftBox" class="mainBox">
+        <% if (raffles.length > 0) { %>
+            <% raffles.forEach(function(raffle) { %>
+                <div class="ContainerDetails">
+                    <p>Raffle: <%= raffle.name %></p>
+                    <p>Prize: <%= raffle.prize %></p>
+                    <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No raffles available</p>
+        <% } %>
     </div>
 
     <div id="RightBox" class="mainBox">

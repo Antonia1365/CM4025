@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb://localhost:27017/ecoscan_system";
+const url = "mongodb://localhost:27017/myRaffleDb";
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const querystring = require('querystring');
@@ -102,36 +102,38 @@ app.post('/signup', (req, res) => {
 
 var obj = "";  //will store the currently logged in user
 app.post('/dologin', function (req, res) {
-
   var Username = req.body.Username;
   var Password = req.body.Password;
-  //find the user by username in the db
+  // Find the user by username in the database
   db.collection('profile').findOne({
     "Username": Username
   }, function (err, result) {
-
     if (err) {
       throw (err);
     }
-    //if there isn't one 
     if (!result) {
       res.redirect('LoginPage');
       console.log("No such user");
       return
     }
-    //check if the password matches  
     if (result.Password == Password) {
       req.session.loggedin = true;
       req.session.currentuser = Username;
       req.session.userId = result._id;
       obj = result;
-      res.render('AccountPage', {
-        account: result
-      })
+      // Retrieve raffles from the database
+      db.collection('raffles').find().toArray((err, raffles) => {
+        if (err) {
+          throw err;
+        }
+        // Pass account and raffles to the AccountPage template
+        res.render('AccountPage', {
+          account: result,
+          raffles: raffles || [] // Pass an empty array if raffles is undefined
+        });
+      });
       console.log("Logged in")
-    }
-    //or notify if it doesn't
-    else {
+    } else {
       res.render("LoginPage", {
         errors: "Wrong pass"
       })
@@ -140,33 +142,36 @@ app.post('/dologin', function (req, res) {
   });
 });
 
-//the account page
+
 app.get("/AccountPage", (req, res) => {
   if (!req.session.loggedin) {
     res.redirect('LoginPage');
-    console.log("No login session");
     return;
   }
-  orders = db.collection('payment_details').find({ "userId": obj._id })
-  //find the logged in user and display its info on the account page
-  db.collection('profile').findOne({
-    "Username": obj.Username
-  }, function (err, result) {
 
+  db.collection('profile').findOne({ "Username": req.session.currentuser }, (err, user) => {
     if (err) {
-      throw (err);
+      throw err;
+    }
+    if (!user) {
+      res.render("LoginPage");
+      return;
     }
 
-    if (!result) {
-      res.render("LoginPage")
-      return
-    }
-
-    res.render('AccountPage', {
-      account: result
-    })
+    db.collection('raffles').find().toArray((err, raffles) => {
+      if (err) {
+        throw err;
+      }
+      // Check if raffles is not defined or is empty
+      if (!raffles || raffles.length === 0) {
+        // Render the AccountPage template with an empty array for raffles
+        res.render('AccountPage', { account: user, raffles: [] });
+      } else {
+        // Render the AccountPage template with the retrieved raffles
+        res.render('AccountPage', { account: user, raffles: raffles });
+      }
+    });
   });
-
 });
 
 
