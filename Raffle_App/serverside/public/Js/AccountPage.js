@@ -3,11 +3,16 @@ $(document).ready(function(){
     var recovery = document.getElementById("Recover");
     var deactivateButton = document.getElementById("Deactivate");
     var warningScreen = document.getElementById("WarningScreen");
-    var warningMessage = document.getElementById("WarningMessage");
     var warningTitle = document.getElementById("WarningTitle");
     var messageInfo = document.getElementById("MessageInfo");
     var status = document.getElementById("Status");
-    var message = document.getElementById("DeletedScreen");
+    var raffleTaken = $("#RaffleTaken");
+
+    if (raffleTaken.css("visibility") === "visible") {
+        setTimeout(function() {
+            raffleTaken.css("visibility", "hidden");
+        }, 5000);
+    }
    
 
 
@@ -40,6 +45,52 @@ document.getElementById("LogOut").onclick = function () {    //will log out the 
 };
 
 deactivateButton.addEventListener('click', deactivateAccount, true);   // Adding the deactivating and recovering
-// recovery.addEventListener('click', recoverAccount, true);              // to the appropriate buttond
+
+// Create a raffle via post request (removed as its served locally)
+/*
+document.getElementById("CreateRaffle").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+    
+    // Get the form data
+    const name = document.querySelector('input[name="name"]').value;
+    const prize = document.querySelector('input[name="prize"]').value;
+    const drawDate = document.querySelector('input[name="drawDate"]').value;
+  
+    // Send a POST request to the server
+    fetch('/createRaffle', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, prize, drawDate })
+    })
+    .then(response => {
+      // Check the response status
+      if (response.ok) {
+        return response.json(); // Parse the JSON response
+      } else {
+        throw new Error('Failed to create raffle');
+      }
+    })
+    .then(data => {
+      // Display success message
+      document.getElementById("successMessage").style.visibility = "visible";
+      setTimeout(() => {
+        // Hide the success message after 5 seconds
+        document.getElementById("successMessage").style.visibility = "hidden";
+      }, 5000);
+    })
+    .catch(error => {
+      // Display error message
+      document.getElementById("errorMessage").style.visibility = "visible";
+      setTimeout(() => {
+        // Hide the error message after 5 seconds
+        document.getElementById("errorMessage").style.visibility = "hidden";
+      }, 5000);
+      console.error('Error:', error);
+    });
+  });
+*/
+
 
 });

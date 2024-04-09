@@ -200,4 +200,111 @@ app.get("/delete", (req, res) => {
 
 });
 
+/*
+// Create a route handler for the "/createRaffle" endpoint
+app.post('/createRaffle', (req, res) => {
+  // Retrieve data from the request body
+  const name = req.body.name;
+  const prize = req.body.prize;
+  const drawDate = req.body.drawDate;
+
+  console.log('Request Body:', req.body); // Log the request body
+
+  // Create a new raffle
+  db.collection('raffles').findOne({ name }, (err, existingRaffle) => {
+    if (err) {
+      console.error('Error finding raffle:', err);
+      res.status(500).json({ success: false, message: 'Failed to find raffle' });
+    } else if (existingRaffle) {
+      // A raffle with the same name 
+      console.log('Existing Raffle:', existingRaffle);
+      res.status(400).json({ success: false, message: 'Raffle name already exists' });
+    } else {
+      // Insert the new raffle 
+      db.collection('raffles').insertOne({ name, prize, drawDate }, (err, result) => {
+        if (err) {
+          console.error('Error creating raffle:', err);
+          //error response
+          res.status(500).json({ success: false, message: 'Failed to create raffle' });
+        } else {
+          console.log('Raffle created successfully');
+          //success response
+          res.status(200).json({ success: true, message: 'Raffle created successfully' });
+        }
+      });
+    }
+  });
+});
+
+*/
+
+
+app.post('/createRaffle', (req, res) => {
+  // Retrieve data from the request body
+  const name = req.body.name;
+  const prize = req.body.prize;
+  const drawDate = new Date(req.body.drawDate); // Convert drawDate to Date object
+
+  // Check if drawDate is in the past
+  if (drawDate < new Date()) {
+    // Render the AccountPage with the error message and the current user
+    renderAccountPage(res, obj, 'Failed');
+    return;
+  }
+  // Check if a raffle with the same name already exists
+  db.collection('raffles').findOne({ name }, (err, existingRaffle) => {
+    if (err) {
+      console.error('Error checking existing raffle:', err);
+      // Render the AccountPage with the error message and the current user
+      renderAccountPage(res, obj, 'Failed');
+      return;
+    }
+    
+    if (existingRaffle) {
+      // A raffle with the same name already exists
+      // Render the AccountPage with the error message and the current user
+      renderAccountPage(res, obj, 'Exists');
+      return;
+    }
+
+    // Create a new raffle object
+    const newRaffle = {
+      name: name,
+      prize: prize,
+      drawDate: drawDate
+    };
+
+    // Insert the new raffle into the database
+    db.collection('raffles').insertOne(newRaffle, (err, result) => {
+      if (err) {
+        console.error('Error creating raffle:', err);
+        // Render the AccountPage with the error message and the current user
+        renderAccountPage(res, obj, 'Failed');
+        return;
+      }
+
+      console.log('Raffle created successfully');
+      // Redirect to the AccountPage after successful creation
+      renderAccountPage(res, obj, 'Success');
+    });
+  });
+});
+
+// Function to render the AccountPage with a message and the current user
+function renderAccountPage(res, user,  errors) {
+  db.collection('raffles').find().toArray((err, raffles) => {
+    if (err) {
+      throw err;
+    }
+    // Render the AccountPage with the provided message and user
+    res.render('AccountPage', {
+      account: user,
+      raffles: raffles || [], // Pass an empty array if raffles is undefined
+      errors: errors
+    });
+  });
+}
+
+
+
 

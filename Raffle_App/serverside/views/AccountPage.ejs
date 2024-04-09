@@ -37,15 +37,33 @@
         <% } else if (account.AccountType === 'Raffle Holder') { %>
             <div class="ContainerDetails">
                 <form action="/createRaffle" method="POST">
-                    <input type="text" name="name" placeholder="Raffle Name (up to 10 chars)" maxlength="10" pattern="[a-zA-Z0-9]{1,10}" required>
-                    <input type="text" name="prize" placeholder="Prize (in £, up to 10 digits)" pattern="\d{1,10}" required>
-                    <input type="date" name="drawDate" placeholder="Draw Date" required>
+                    <input class="createForms"  type="text" name="name" placeholder="Raffle Name (up to 10 chars)" maxlength="10" pattern="[a-zA-Z0-9]{1,10}" required>
+                    <input class="createForms" type="text" name="prize" placeholder="Prize (in £, up to 10 digits)" pattern="\d{1,10}" required>
+                    <input class="createForms"  type="date" name="drawDate" placeholder="Draw Date" required>
                     <button id="CreateRaffle" class="submit" type="submit">Create Raffle</button>
                 </form>
                 <button id="DisplayRaffles" class="submit" type="button">My Raffles</button>
             </div>
         <% } %>
+            
+        <!-- Define hidden message divs -->
+        <% if (locals.errors) { %>
+            <div id="RaffleTaken" class="HintBox" style="visibility: visible;">
+            <ul class="taken">
+                <% if (errors === "Failed") { %>
+                    <li  class="HintList">Error!</li>
+                <% } %>  
+                    <% if (errors === "Success") { %>
+                      <li  class="HintList">Raffle successfully<br>created.</li>
+                    <% }  else { %>
+                      <li  class="HintList">Failed to create raffle.</li>
+                    <% } %>
+                </ul>
+            </div>
+         <% } %>
     </div>
+
+
     
 
     <div id="RightBox" class="mainBox">
