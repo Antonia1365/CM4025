@@ -140,37 +140,58 @@ app.post('/dologin', function (req, res) {
   });
 });
 
+// Assuming req.session.currentuser contains the username of the logged-in user
 
 app.get("/AccountPage", (req, res) => {
   if (!req.session.loggedin) {
-    res.redirect('LoginPage');
-    return;
+      res.redirect('LoginPage');
+      return;
   }
 
   db.collection('profile').findOne({ "Username": req.session.currentuser }, (err, user) => {
-    if (err) {
-      throw err;
-    }
-    if (!user) {
-      res.render("LoginPage");
-      return;
-    }
-
-    db.collection('raffles').find().toArray((err, raffles) => {
       if (err) {
-        throw err;
+          throw err;
       }
-      // Check if raffles is not defined or is empty
-      if (!raffles || raffles.length === 0) {
-        // Render the AccountPage template with an empty array for raffles
-        res.render('AccountPage', { account: user, raffles: [] });
+      if (!user) {
+          res.render("LoginPage");
+          return;
+      }
+
+      if (user.AccountType === 'Raffle Holder') {
+          // Find raffles created by the current user
+          db.collection('raffles').find({ "user": user }).toArray((err, userRaffles) => {
+              if (err) {
+                  throw err;
+              }
+              // Check if raffles is not defined or is empty
+              if (!userRaffles || userRaffles.length === 0) {
+                  // Render the AccountPage template with an empty array for raffles
+                  res.render('AccountPage', { account: user, raffles: [] });
+              } else {
+                  // Render the AccountPage template with the retrieved raffles
+                  res.render('AccountPage', { account: user, raffles: userRaffles });
+              }
+          });
       } else {
-        // Render the AccountPage template with the retrieved raffles
-        res.render('AccountPage', { account: user, raffles: raffles });
+          // For other account types, find raffles with draw dates greater than the current date
+          const currentDate = new Date();
+          db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
+              if (err) {
+                  throw err;
+              }
+              // Check if raffles is not defined or is empty
+              if (!allRaffles || allRaffles.length === 0) {
+                  // Render the AccountPage template with an empty array for raffles
+                  res.render('AccountPage', { account: user, raffles: [] });
+              } else {
+                  // Render the AccountPage template with the retrieved raffles
+                  res.render('AccountPage', { account: user, raffles: allRaffles });
+              }
+          });
       }
-    });
   });
 });
+
 
 
 //the logout function
@@ -295,9 +316,17 @@ app.post('/createRaffle', (req, res) => {
 
 // Function to render the AccountPage with a message and the current user
 function renderAccountPage(res, user,  errors) {
-  db.collection('raffles').find().toArray((err, raffles) => {
+  db.collection('raffles').find({ "user": user }).toArray((err, userRaffles) => {
     if (err) {
-      throw err;
+        throw err;
+    }
+    // Check if raffles is not defined or is empty
+    if (!userRaffles || userRaffles.length === 0) {
+        // Render the AccountPage template with an empty array for raffles
+        raffles = [];
+    } else {
+        // Render the AccountPage template with the retrieved raffles
+        raffles = userRaffles;
     }
     // Render the AccountPage with the provided message and user
     res.render('AccountPage', {

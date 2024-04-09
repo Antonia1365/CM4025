@@ -7,14 +7,35 @@ $(document).ready(function(){
     var messageInfo = document.getElementById("MessageInfo");
     var status = document.getElementById("Status");
     var raffleTaken = $("#RaffleTaken");
+    var MyRaffle = $("#MyRaffle");
+    var CreateRaffle = $("#CreateRaffle");
+    var accountType = $('#LeftBox').data('account-type');
+    
 
     if (raffleTaken.css("visibility") === "visible") {
         setTimeout(function() {
             raffleTaken.css("visibility", "hidden");
         }, 5000);
     }
-   
 
+
+        // Initially hide the CreateRaffle section
+        
+
+        // When the button is clicked
+    $('#CreateRaffle_btn').click(function() {
+        // Show the CreateRaffle section and hide the MyRaffle section
+        $("#CreateRaffle").css("visibility", "visible");
+        $("#MyRaffle").css("visibility", "hidden");
+        $("#CreateRaffle_btn").css("visibility", "hidden");
+    });
+
+    $('#DisplayRaffles').click(function() {
+        // Show the MyRaffle section and hide the CreateRaffle section
+        $("#CreateRaffle").css("visibility", "hidden");
+        $("#MyRaffle").css("visibility", "visible");
+        $("#CreateRaffle_btn").css("visibility", "visible");
+    });
 
 // Function which displays the message box with explanation on when the account
 // will be deleted and when it is recoverable
@@ -91,6 +112,8 @@ document.getElementById("CreateRaffle").addEventListener("click", function(event
     });
   });
 */
+
+
 
 
 });
