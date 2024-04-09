@@ -55,20 +55,10 @@
     <!----------------------------------------------------------------------->
 </div>
 
-<% if (locals.errors) { %>
-    <div id="UsernameTaken" class="HintBox" style="visibility: visible;">
-    <ul class="taken">
-        <% if (errors === "Username taken") { %>
-            <li  class="HintList">Username already exists</li>
-        <% } %>  
-            <% if (errors === "Account created") { %>
-              <li  class="HintList">Account created!<br>You can now Login</li>
-            <% }  else { %>
-              <li  class="HintList">Wrong password!</li>
-            <% } %>
-    </ul>
-    </div>
- <% } %>
+<!------------- Message for successful creation to appear later --------->
+<div id="AccountCreated" class="Message">
+    <p class="messageText">Your account was created.<br><br>Login and<br>Start Scanning!</p>
+</div>
 
 <!--------------------- Background image/ box for logging in ------------------------------------------------>
 <div id = "RightBox" class="mainBox">
@@ -90,6 +80,8 @@
         <form action= '/dologin' method='POST'>
          <input class="loginForms" type="name" placeholder="Username:" name="Username" required pattern="\S+">
          <input class="loginForms" type="password" placeholder="Password:" name="Password" required pattern="\S+">
+         <button id="SubmitLogin" class="submit" type="submit" style="display: none;">Enter</button>
+        </form>
     </div>
 
     <!------------------------ Input forms for signing up -------------------->
@@ -101,7 +93,7 @@
             <input class="createForms" type="password" placeholder="Password:" name="Password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
                    title="One number, uppercase and lowercase letters. At least 8 or more characters total" required>
             </div>
-            <button id="SubmitCreate" type="submit">Create</button>
+            <button id="SubmitCreate" class="submit" type="submit">Create</button>
             </form>
          
     <!--- Hint box explaining username requirements appears on mouse hover over white circle --->
@@ -123,14 +115,26 @@
             <li class="HintList">At least one number.</li>
         </ul>
     </div>
-    <!--------------------------- Enter/ Log in button ---------------------->
-    <button id="SubmitLogin" class="submit" type="submit" style="display: none;">Enter</button>
+    
     <!-- Button to toggle login/signup forms -->
     <button id="ToggleLoginSignup" class="submit" type="button">Or Log In</button>
 </form>
     <!----------------------------------------------------------------------->
 </div>
-
+<% if (locals.errors) { %>
+    <div id="UsernameTaken" class="HintBox" style="visibility: visible;">
+    <ul class="taken">
+        <% if (errors === "Username taken") { %>
+            <li  class="HintList">Username already exists</li>
+        <% } %>  
+            <% if (errors === "Account created") { %>
+              <li  class="HintList">Account created!<br>You can now Login</li>
+            <% }  else { %>
+              <li  class="HintList">Wrong password!</li>
+            <% } %>
+    </ul>
+    </div>
+ <% } %>
 <!-------------------------------------- Footer --------------------------------------------------------------->
 <footer>
     <%- include('partials/footer'); %>

@@ -77,30 +77,12 @@ right: 4vw;
 top: 10vw;
 right: 17.5vw;
 }
-#Home{
-top: 10vw;
-right: 31vw;
-}
+
 #System{
 top: 22.5vw;;
 right: 4vw;
 }
-#AboutScan{
-top: 22.5vw;
-right: 17.5vw;
-}
-#Map{
-top: 22.5vw;
-right: 31vw;
-}
-#EcoShop{
-top: 35vw;
-right: 4vw;
-}
-#Scanner{
-top: 47.5vw;
-right: 4vw;
-}
+
 /*-----------------------------------------------------------------------------------------------------------*/
 /* Background divs ------------------------------------------------------------------------------------------*/
 #LeftBox.mainBox{
@@ -200,19 +182,7 @@ visibility: visible;
 visibility: visible;
 }
 
-/* Quick Link to account page ---------------------------------------------------------------*/
-#AccountQuickLink{
-font-size: 1.5vw;
-padding: 1.5vw;
-color: black;
-text-decoration: none;
-transition: all 0.25s ease-in; 
-}
-#AccountQuickLink:hover{
-color: rgb(37, 172, 27);
-font-size: 1.7vw;
-}
-/*-----------------------------------------------------------------------------------------------------------*/
+
 /* Input forms ----------------------------------------------------------------------------------------------*/
 form {
 border: 0.5vw solid rgba(255, 255, 255, 0);
@@ -300,6 +270,17 @@ color:rgba(231, 9, 9, 0.685);
 .red::-ms-input-placeholder { 
 color:rgba(231, 9, 9, 0.685);
 }
+
+.taken{
+  color:rgba(212, 16, 16, 0.87);
+  margin-left: -3.5vw;
+  }
+  #UsernameTaken{
+    margin-left: 4vw;
+    text-align: center;
+  }
+
+
 
 /* Hints for pass----------------------------------------------------------------*/
 .Hint{
@@ -534,30 +515,11 @@ right: 4vw;
 top: 23vw;
 right: 35vw;
 }
-#Home{
-top: 23vw;
-right: 66vw;
-}
+
 #System{
 top: 54vw;
 right: 4vw;
 }
-#AboutScan{
-top: 54vw;
-right: 35vw;
-}
-#Map{
-top: 54vw;
-right: 66vw;
-}
-#EcoShop{
-top: 85vw;
-right: 4vw;
-}
-#Scanner{
-top: 116vw;
-right: 4vw;
-} */
 /*-------------------------------------------------------------------------------------------*/
 
 #LogoSmall{ 
@@ -656,13 +618,7 @@ width: 40vw;
 height: 24vw;
 font-size: 3.4vw;
 }
-#AccountQuickLink{
-font-size: 3.5vw;
-margin-top: -1.5vw; 
-}
-#AccountQuickLink:hover{
-font-size: 3.5vw;
-}
+
 #AccountCreated{
   top: 65vw;
   left: 31vw;

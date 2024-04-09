@@ -43,8 +43,9 @@ app.get("/", (req, res) => {
   res.render("LoginPage");
 });
 
-
-
+app.get("/LoginPage", (req, res) => {
+  res.render("LoginPage");
+});
 
 //Sign up
 app.post('/signup', (req, res) => {
@@ -62,7 +63,8 @@ app.post('/signup', (req, res) => {
     "Username": Username,
     "Email": Email,
     "Password": Password,
-    "UniqueId": UniqueId,
+    "CodesScanned": CodesScanned,  //num of qr codes scanned 
+    "Discount": Discount   //num of discounts ready to be used
   }
 
   //search the db for an already existing username before adding 
