@@ -156,13 +156,16 @@ app.get("/AccountPage", (req, res) => {
           res.render("LoginPage");
           return;
       }
+      console.log(user.Username);
+      console.log(user.AccountType);
 
       if (user.AccountType === 'Raffle Holder') {
           // Find raffles created by the current user
-          db.collection('raffles').find({ "user": user }).toArray((err, userRaffles) => {
+          db.collection('raffles').find({ "user": user.Username }).toArray((err, userRaffles) => {
               if (err) {
                   throw err;
               }
+              console.log(userRaffles);
               // Check if raffles is not defined or is empty
               if (!userRaffles || userRaffles.length === 0) {
                   // Render the AccountPage template with an empty array for raffles
