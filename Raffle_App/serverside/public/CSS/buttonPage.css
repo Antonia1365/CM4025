@@ -1,0 +1,76 @@
+
+
+body
+{
+    height: 100%;
+    margin: 0;
+    user-select: none;
+    -webkit-tap-highlight-color:transparent;
+    background-color: white;
+}
+.boxImg{
+  
+    position:absolute;                  
+    bottom:22% ;                          
+    right:20;
+    
+}
+.details_btn{
+    top: 50%;
+    left: 20%;
+    background-color: red;
+ }
+#app
+{
+    position: absolute;
+    top: 84%;
+    right:0;
+    left: 39%;
+    width: auto;
+    height: 125;
+    margin: 0 auto;
+    transform: translateY(-50%);
+    overflow: hidden;
+    z-index:1;
+}
+
+.button
+{
+    width: 1.30vw;
+    height: 1.3vw;
+    float: left;
+    margin-right: 1.30vw;
+    background-color:black;
+    border-radius: 1.30vw;
+    cursor: pointer;
+    transition: 0.3s ease width;
+}
+
+.button:last-child
+{
+    margin-right: 0;
+}
+
+.button.active
+{
+    width: 3.90vw;
+    cursor: auto;
+}
+
+
+#ytd-url {
+  display: block;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  margin: 1.30vw;
+  color: #fff;
+  font-family: Arial;
+  font-size: 0.911vw;
+  text-decoration: none;
+  background-color: #2c2c2c;
+  border-radius: 0.260vw;
+  box-shadow: 0 0.65vw 1.30vw -0.32vw rgba(0, 0, 0, 0.3);
+  z-index: 125;
+}

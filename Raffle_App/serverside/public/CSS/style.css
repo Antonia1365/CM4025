@@ -1,0 +1,475 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  
+}
+
+#Navigation{
+  cursor: pointer;
+  position: absolute;
+  width: 11vw;
+  height: 5.5vw;
+  right: 4vw;
+  top: 1vw;
+  background-color: #f7f5f5ef;
+  border-radius: 3vw;
+  border: none;
+  outline: none;
+  font-size: 2vw;
+  text-align: center;
+  box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.103), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.103);
+  transition: all 0.27s ease-in;  
+  z-index: 30;
+}
+.circle{
+  display: inline-block;
+  background-color: #fafafaef;
+  width: 1.5vw;
+  height: 1.5vw;
+  margin: 0.3vw;
+  border-radius: 3vw;
+  box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.089), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.096);
+}
+#Navigation:hover{
+background-color: rgb(112, 214, 105);
+}
+#HomeDropdown, #RecycleDropdown{
+visibility: hidden;
+display: inline-block;
+}
+/*-------------------------------------------------------------------------------------------*/
+.menuBox{
+cursor: pointer;
+position: absolute;
+z-index: 10;
+width: 12vw;
+height: 11vw;
+border-radius: 2.7vw;
+font-size: 1.7vw;
+display: table;
+text-align: center;
+background-color: #fafafa;
+box-shadow: 0 0vw 0vw 0 rgba(0, 0, 0, 0.219), 0 0.6vw 0.6vw 0 rgba(0, 0, 0, 0.384); 
+transition: all 0.27s ease-in; 
+z-index: 30;
+}
+.Text{
+text-decoration: none;
+display: table-cell;
+vertical-align: middle;
+color: black;
+}
+.menuBox:hover{
+background-color:  rgb(112, 214, 105);
+}
+.Text:hover{
+color: white;
+}
+
+#Account{
+top: 9vw;
+right: 4.5vw;
+}
+#MyAccount{
+top: 9vw;
+right: 17vw;
+}
+#Home{
+top: 9vw;
+right: 29.5vw;
+}
+#System{
+top: 20.7vw;;
+right: 4.5vw;
+}
+#AboutScan{
+top: 20.7vw;
+right: 17vw;
+}
+#Map{
+top: 20.7vw;
+right: 29.5vw;
+}
+#EcoShop{
+top: 32.4vw;
+right: 4.5vw;
+}
+#Login-Signup{
+top: 44.1vw;
+right: 4.5vw;
+}
+#ArticlesBox{
+  top: 55.8vw;
+  right: 4.5vw;
+}
+
+
+  #Green.backgroundBox{
+    top: 12vw;
+    left: 2.5vw; 
+  }
+  #Yellow.backgroundBox{
+    top: 12vw;
+    right: 2.5vw;  
+  }
+  .shadow{
+    position: absolute;  
+    width: 38vw;
+    height: 52vw;  
+    border-radius: 4vw;  
+  }
+  #YellowShadow.shadow{
+    top: 15vw;
+    right: 6vw;
+    background-color: rgba(255, 255, 255, 0.829);   
+  }
+  #GreenShadow.shadow{
+    top: 15vw;
+    left: 6vw;
+    background-color: rgba(255, 255, 255, 0.774);   
+  } 
+.backgroundBox{
+    position: absolute;  
+    text-align: center; 
+    width: 45vw;
+    height: 60vw;  
+    border-radius: 4vw;  
+    box-shadow: 0 1vw 1vw 0 rgba(0, 0, 0, 0.205), 0 2vw 2vw 0 rgba(0, 0, 0, 0.158); 
+}
+
+a {
+  text-decoration: none;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li.item-a {
+  float: left;
+  height: 45vw;
+}
+
+.ulButtons {
+  list-style-type: none;
+  margin: -5vw;
+  padding: 0;
+  overflow: hidden;
+}
+
+.liButtons {
+  float: left;
+  margin-left: -9px;
+}
+
+#app {
+  position: absolute;
+  top: 42vw;
+  right: 0;
+  left: 39%;
+  width: auto;
+  height: 10vw;
+  margin: 0 auto;
+  transform: translateY(-50%);
+  overflow: hidden;
+}
+
+.button {
+  width: 1.3vw;
+  height: 1.3vw;
+  float: left;
+  margin-right: 1.3vw;
+  margin-top: 3vw;
+  margin-left: 0.3vw;
+  background-color: black;
+  border-radius: 1.3vw;
+  cursor: pointer;
+  transition: 0.3s ease width;
+}
+
+.active, button {
+  width: 3.9vw;
+  cursor: auto;
+  color: #252525;
+
+}
+
+.box {
+  top: 10%;
+  width: 16vw;
+  box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  left: 2.5vw;
+  margin: 1vw;
+}
+
+.slide-img {
+  height: 29vw;
+  position: relative;
+  bottom: 5%;
+}
+
+.slide-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+.detail-box {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+.overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(220, 219, 175, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.buy-btn {
+  width: 8vw;
+  height: 3vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: whitesmoke;
+  color: #252525;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 20px;
+  box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.2);
+}
+
+.buy-btn:hover {
+  color: white;
+  background-color: #4e7960;
+  transition: all ease 0.3s;
+}
+
+.overlay {
+  visibility: hidden;
+}
+.slide-img:hover .overlay {
+  visibility: visible;
+  animation: fade 0.5s;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+#price {
+  position: relative;
+  left: 1%;
+  font-weight: 500;
+  color: rgb(138, 91, 3);
+  font-size: 1.5vw;
+}
+.size {
+  position: relative;
+  left: 1%;
+  font-weight: 500;
+  color: rgb(138, 91, 3);
+  font-size: 1.2vw;
+}
+.delivery {
+  position: relative;
+  font-weight: 500;
+  left: 1%;
+  color: rgb(138, 91, 3);
+  font-size: 1.2vw;
+  position: absolute;
+  top: 60%;
+}
+
+.size-value{
+  margin-left: 11vw;
+  margin-top: 5.2vw;
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+text-align: center;
+}
+.size-value button{
+  margin: 0.5vw;
+  height: 2.4vw;
+  width: 3vw;
+  text-align: center;
+  line-height: 0.5vw;
+  border-radius: 50%;
+  font-size: 1.5vw;
+  font-weight: 500;
+  cursor: pointer;
+  color: #4e7960;
+  border: none;
+  outline: none;
+  transition: all 0.25s ease-in;
+}
+.addToCart {
+  border: 0.5vw solid;
+  color: #4e7960;
+  font-size: 1vw;
+  font-weight: 100;
+  text-decoration: none;
+  padding: 0.5vw 0.5vw;
+  border-radius: 0.7vw;
+  display: inline-block;
+  position: relative;
+  left: 2%;
+  margin: 10px;
+  
+}
+.addToCart:hover{
+  color: white;
+  background-color:  rgb(107, 180, 102); ;
+}
+
+.review {
+  border: 0.5vw solid;
+  color: #4e7960;
+  font-size: 1vw;
+  font-weight: 100;
+  text-decoration: none;
+  padding: 0.5vw 0.5vw;
+  border-radius: 0.7vw;
+  display: inline-block;
+  margin: 20px;
+
+}
+.review:hover{
+  color: white;
+  background-color:  rgb(107, 180, 102); ;
+}
+
+.buy {
+  border: 0.5vw solid;
+  background-color: rgb(232, 250, 132);
+  color: #4e7960;
+  font-size: 1vw;
+  font-weight: 100;
+  text-decoration: none;
+  padding: 0.5vw 0.5vw;
+  border-radius: 0.7vw;
+  display: inline-block;
+  left: 7%;
+  margin-top: 1vw;
+  width: 10%;
+  text-align: center;
+  position: relative;
+  bottom: 100%;
+}
+.buy:hover{
+  color: white;
+  background-color:  rgb(107, 180, 102); ;
+}
+
+/* Footer ---------------------------------------------------------------------------------------------------*/
+.Footer{
+  position: absolute;
+  max-width: 100%;
+  top: 60vw;
+  right: 0;
+  left: 0;
+  height: 30vw;
+  background-color:white;  
+}
+/*-------------------------------------------------------------------------------------------*/
+#LogoText{
+margin-top: 20vw;
+margin-left: 5vw;
+width: 30%;
+}
+.ContactInfo{
+margin-top: 5vw;
+margin-left: 2vw;
+margin-bottom: 8vw;
+}
+li.Contacts {
+font-family: 'Calibri';
+font-size: 2vw;
+list-style-type: none;
+margin: 1vw 0 0 2vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+.SocialLinks{
+width: 35%;
+}    
+.SocialBox{
+position: absolute;
+width: 6vw;
+margin-top: -10vw;
+border-radius: 15%;
+text-align: center;
+background-color:#fafafaef;
+transition: all 0.25s ease-in;
+}
+.Icons{
+width: 3vw;
+padding: 1vw;
+}
+
+/*-------------------------------------------------------------------------------------------*/
+#Instagram.SocialBox{
+margin-left: 45vw;
+}
+#Twitter.SocialBox{
+  margin-left: 55vw;
+}
+#Youtube.SocialBox{
+  margin-left: 65vw;
+}
+#Facebook.SocialBox{
+  margin-left: 75vw;
+}
+/*-------------------------------------------------------------------------------------------*/  
+#Instagram:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #fbae5036;
+  background-color:#fafafa2a;
+}
+#Twitter:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #4ac8ee36;
+  background-color:#fafafa2a;
+}
+#Youtube:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #fc58582a;
+  background-color:#fafafa2a;
+}
+#Facebook:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #557bf72a;
+  background-color:#fafafa2a;
+}
+@media (min-width: 250px) and (max-width: 699px) {
+  .liButtons {
+    float: left;
+    margin-left: -1px;
+    margin-right: 10px;
+   
+  }
+  .delivery{
+    float: left;
+    margin-right: 10px;
+    margin-top: 30px;
+  }
+}

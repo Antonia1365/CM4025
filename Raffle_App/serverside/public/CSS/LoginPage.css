@@ -1,0 +1,809 @@
+body{
+  font-family: Arial,Helvetica,lighter;
+}
+#LogoSmall{
+margin-left: 2vw;
+margin-top: 1.5vw;
+border-radius: 10%;
+transition: all, 0.3, ease-in;
+box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0);
+width: 8vw;
+}
+
+/* Navigation Bar --------------------------------------------------------------------------------------------*/
+#Navigation{
+  width: 12vw;
+  height: 6vw;
+  right: 3.5vw;
+  top: 1vw;
+  background-color: #f7f5f5ef;
+  border-radius: 3vw;
+  border: none;
+  font-size: 2vw;
+  font-family: 'Coming Soon', cursive;
+  text-align: center;
+  box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.103), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.103);
+  transition: all 0.27s ease-in;  
+}
+.circle{
+  display: inline-block;
+  background-color: #fafafaef;
+  width: 1.5vw;
+  height: 1.5vw;
+  margin: 0.3vw;
+  border-radius: 3vw;
+  box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.089), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.096);
+}
+#Navigation:hover{
+background-color: rgb(112, 214, 105);
+}
+#HomeDropdown, #RecycleDropdown{
+visibility: hidden;
+display: inline-block;
+}
+/*-------------------------------------------------------------------------------------------*/
+.menuBox{
+position: absolute;
+z-index: 3;
+width: 13vw;
+height: 12vw;
+border-radius: 2.7vw;
+font-size: 1.7vw;
+display: table;
+text-align: center;
+background-color: #fafafa;
+box-shadow: 0 0vw 0vw 0 rgba(0, 0, 0, 0.219), 0 0.6vw 0.6vw 0 rgba(0, 0, 0, 0.384); 
+transition: all 0.27s ease-in; 
+}
+.Text{
+text-decoration: none;
+display: table-cell;
+vertical-align: middle;
+color: black;
+}
+/*-------------------------------------------------------------------------------------------*/
+.menuBox:hover{
+background-color:  rgb(112, 214, 105);
+}
+.Text:hover{
+color: white;
+}
+/* Positions --------------------------------------------------------------------------------*/
+#Account{
+top: 10vw;
+right: 4vw;
+}
+#MyAccount{
+top: 10vw;
+right: 17.5vw;
+}
+#Home{
+top: 10vw;
+right: 31vw;
+}
+#System{
+top: 22.5vw;;
+right: 4vw;
+}
+#AboutScan{
+top: 22.5vw;
+right: 17.5vw;
+}
+#Map{
+top: 22.5vw;
+right: 31vw;
+}
+#EcoShop{
+top: 35vw;
+right: 4vw;
+}
+#Scanner{
+top: 47.5vw;
+right: 4vw;
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Background divs ------------------------------------------------------------------------------------------*/
+#LeftBox.mainBox{
+  top: 13vw;
+  left: 2.5vw;
+  background-color: #3b73e4c2; 
+}
+#RightBox.mainBox{
+  top: 13vw;
+  right: 2.5vw;  
+  background-color: white; 
+}
+.shadow{
+  position: absolute;  
+  width: 45vw;
+  height: 70vw;  
+  border-radius: 4vw; 
+  background-color: rgba(0, 0, 0, 0.472);
+  transition: all 0.25s ease-in;   
+}
+
+
+.Container{
+  letter-spacing: 0.2cm;
+}
+
+.mainBox{
+  position: absolute;  
+  text-align: center; 
+  width: 45vw;
+  height: 70vw;  
+  border-radius: 4vw;  
+  box-shadow: 0 1.5vw 1.5vw 0 rgba(0, 0, 0, 0.205), 0 2.5vw 2.5vw 0 rgba(0, 0, 0, 0.158);
+  transition: all 0.5s ease-in-out;
+  opacity: 0.5; 
+}
+
+.shadow:hover{
+display: none; 
+}
+
+.mainBox:hover {
+margin-top: -1.7%;
+opacity: 1;
+
+}
+
+.mainBox:hover + .Container{
+margin-top: -1.7%;
+opacity: 1;
+
+}
+
+.mainBox:hover ~ .Forms{
+margin-top: -1.7%;
+opacity: 1;
+
+}
+
+.mainBox:hover ~ .submit{
+margin-top: -1%;
+opacity: 1;
+
+}
+
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Message boxes --------------------------------------------------------------------------------------------*/
+.Message{
+position: absolute;
+top: 35vw;
+width: 24vw;
+height: 12vw;
+background-color: white;
+border-radius: 3vw; 
+box-shadow: 0 1vw 1vw 0 rgba(0, 0, 0, 0.205), 0 2vw 2vw 0 rgba(0, 0, 0, 0.158); 
+color: black;
+font-size: 1.6vw;
+text-align: center;
+}
+.messageText{
+margin-top: 2.5vw;
+}
+
+/* Positions ----------------------------------------------------------------------------------*/
+#AccountCreated{
+left: 11.5vw;
+visibility: hidden;
+}
+#LoggedIn{
+right: 11.5vw;
+visibility: hidden;
+}
+#Signup{
+visibility: visible;
+}
+#Login{
+visibility: visible;
+}
+
+/* Quick Link to account page ---------------------------------------------------------------*/
+#AccountQuickLink{
+font-size: 1.5vw;
+padding: 1.5vw;
+color: black;
+text-decoration: none;
+transition: all 0.25s ease-in; 
+}
+#AccountQuickLink:hover{
+color: rgb(37, 172, 27);
+font-size: 1.7vw;
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Input forms ----------------------------------------------------------------------------------------------*/
+form {
+border: 0.5vw solid rgba(255, 255, 255, 0);
+}
+.Forms{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 17vw;
+}
+
+/*-------------------------------------------------------------------------------------------*/
+input{
+width: 27vw;
+padding: 1.3vw 2.3vw;
+margin-bottom: 2vw;
+margin-top: 1vw;
+display: block;
+border: 0.3vw solid #ffffffed;
+border-radius: 1vw;
+box-sizing: border-box;
+font-weight: lighter;
+font-size: 1.5vw;
+background-color: rgba(251, 251, 251, 0.895);
+-webkit-border-radius: 2vw;
+  -moz-border-radius: 2vw;
+border-radius: 1vw;
+
+-webkit-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+  -moz-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+    box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+}
+::placeholder{
+color: rgba(49, 49, 49, 0.616);
+}
+label{
+color: rgba(49, 49, 49, 0.616);
+font-weight: bold;
+font-size: 1.5vw;
+display: block;
+width: 7vw;
+margin-left: -1vw;
+margin-top: 1vw;;
+float: left;
+}
+label::after{
+content: " ";
+}
+select{
+width: 20vw;
+padding: 1.3vw 2.3vw;
+margin-bottom: 2vw;
+display: block;
+font-weight: lighter;
+font-size: 1.5vw;
+-webkit-border-radius: 2vw;
+-moz-border-radius: 2vw;
+border-radius: 1vw;
+
+-webkit-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+  -moz-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+    box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+}
+
+/*-------------------------------------------------------------------------------------------*/
+#Signup.Forms{
+left: 7.3vw;
+}
+#Login.Forms{
+right: 7.3vw;
+}
+
+/* Classes for error inputs ----------------------------------------------------------------*/
+.error{
+border: 0.3vw solid rgba(199, 6, 6, 0.425);
+}
+.red::placeholder { 
+color:rgba(231, 9, 9, 0.685); 
+}
+.red:-ms-input-placeholder { 
+color:rgba(231, 9, 9, 0.685);
+}
+.red::-ms-input-placeholder { 
+color:rgba(231, 9, 9, 0.685);
+}
+
+/* Hints for pass----------------------------------------------------------------*/
+.Hint{
+position: absolute;
+z-index: 5;
+background-color: #fafafaef;
+width: 2.3vw;
+height: 2.3vw;
+border-radius: 3vw;
+box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.089), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.26);
+}
+
+.Hint:hover{
+background-color:rgba(22, 22, 22, 0.746);
+}
+
+.HintBox{
+position: absolute;
+z-index: 6;
+width: 18vw;
+background-color: white;
+border-radius: 2vw;
+color: black;
+display: table;   
+vertical-align: center;
+box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.089), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.26);
+text-align: left;
+visibility: hidden;
+
+}
+li{
+  list-style-type: none;
+}
+/*-------------------------------------------------------------------------------------------*/
+#PassHint{
+top: 35vw;
+left: 3vw;
+}
+#PassHintBox{
+height: 11.5vw;
+top: 35vw;
+left: 7vw;
+}
+
+#NameHint, #RaffleNameHint{
+  top: 20vw;
+  left: 3vw;
+}
+
+#NameHintBox, #RaffleNameHintBox{
+  top: 20vw;
+  left: 7vw;
+}
+.HintList {
+margin-left: -1vw;
+margin-top: 1vw;
+}
+
+
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Buttons --------------------------------------------------------------------------------------------------*/
+button{
+
+width: 11vw;
+height: 5vw;
+margin: 1vw;
+top: 60vw ;
+font-size: 1.3vw;
+font-weight: lighter;
+border-radius: 1vw;
+outline:none;
+text-align: center;
+
+vertical-align: center;
+transition: all 0.3s ease-in;
+border: none;
+background-color:#3B7DE4;
+color: white;
+}
+#Navigation{
+  position: absolute;
+}
+.submit{
+ margin-top: 5vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------*/
+button:hover{
+background-color: rgb(22, 22, 22);
+color: rgba(255, 255, 255, 0.92);
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Title divs -----------------------------------------------------------------------------------------------*/
+.Container{
+position: absolute;
+width: 30vw;
+top: 5vw;
+padding: 0.5;
+font-size: 3vw;
+font-weight: lighter;
+border-radius: 2vw;
+display: table;   
+vertical-align: center;
+text-align: center; 
+}  
+/*-------------------------------------------------------------------------------------------*/
+#Create.Container{
+  left: 7vw;
+  color: whitesmoke;
+  text-shadow: 2px 2px 3px rgba(82, 82, 82, 0.525);
+}
+#Enter.Container{
+  right: 7vw;
+  color: #3B7DE4;
+  text-shadow: 2px 2px 3px rgba(185, 185, 185, 0.525);
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Footer ---------------------------------------------------------------------------------------------------*/
+.Footer{
+  position: absolute;
+  max-width: 100%;
+  top: 90vw;
+  right: 0;
+  left: 0;
+  height: 35vw;
+  background-color:white;  
+}
+/*-------------------------------------------------------------------------------------------*/
+#LogoText{
+margin-top: 2vw;
+margin-left: 5vw;
+width: 10%;
+}
+.ContactInfo{
+margin-top: 5vw;
+margin-left: 2vw;
+margin-bottom: 8vw;
+}
+li.Contacts {
+font-family: 'Calibri';
+font-size: 1.5vw;
+list-style-type: none;
+margin: 1.5vw 0;
+letter-spacing: 0.03cm;
+}
+#ContactUs{
+font-size: 2.4vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+.SocialLinks{
+position: absolute;
+width: 35%;
+}    
+.SocialBox{
+width: 20%;
+border-radius: 15%;
+text-align: center;
+background-color:#fafafaef;
+transition: all 0.25s ease-in;
+}
+.Icons{
+width: 50%;
+padding-top: 15%;
+padding-bottom: 15%;
+}
+
+/*-------------------------------------------------------------------------------------------*/
+#Instagram.SocialBox{
+margin-top: -15vw;
+margin-left: 43vw;
+}
+#Twitter.SocialBox{
+  margin-top: -6vw;
+  margin-left: 53vw;
+}
+#Youtube.SocialBox{
+  margin-top: -6vw;
+  margin-left: 63vw;
+}
+#Facebook.SocialBox{
+  margin-top: -6vw;
+  margin-left: 73vw;
+}
+/*-------------------------------------------------------------------------------------------*/  
+#Instagram:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #fbae5036;
+  background-color:#fafafa2a;
+}
+#Twitter:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #4ac8ee36;
+  background-color:#fafafa2a;
+}
+#Youtube:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #fc58582a;
+  background-color:#fafafa2a;
+}
+#Facebook:hover{
+  box-shadow: 0vw 1vw 1vw 0vw #557bf72a;
+  background-color:#fafafa2a;
+}
+
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Resizing/ Mobile sized screen ----------------------------------------------------------------------------*/
+@media (min-width: 250px) and (max-width: 699px) {
+/* #Navigation{
+  width: 27vw;
+  height: 13vw;
+  right: 4vw;
+  top: 5vw;
+  border-radius: 7vw;
+  font-size: 3vw;
+}
+.circle{
+  width: 4vw;
+  height: 4vw;
+  border-radius: 5vw;
+} */
+/*-------------------------------------------------------------------------------------------*/
+/* .menuBox{
+width: 30vw;
+height: 29vw;
+border-radius: 7vw;
+font-size: 4.5vw;
+}
+#Account{
+top: 23vw;
+right: 4vw;
+}
+#MyAccount{
+top: 23vw;
+right: 35vw;
+}
+#Home{
+top: 23vw;
+right: 66vw;
+}
+#System{
+top: 54vw;
+right: 4vw;
+}
+#AboutScan{
+top: 54vw;
+right: 35vw;
+}
+#Map{
+top: 54vw;
+right: 66vw;
+}
+#EcoShop{
+top: 85vw;
+right: 4vw;
+}
+#Scanner{
+top: 116vw;
+right: 4vw;
+} */
+/*-------------------------------------------------------------------------------------------*/
+
+#LogoSmall{ 
+width: 16vw;
+}
+
+.mainBox{
+width: 80vw;
+height: 105vw;
+border-radius: 6.5vw;
+}
+.shadow{
+width: 70vw;
+height: 95vw;
+border-radius: 6.5vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+#LeftBox.mainBox{
+  left: 11vw;
+  top: 25vw;
+}
+#GreenShadow.shadow{
+  top: 29.5vw;
+  left: 16vw;
+}
+#RightBox.mainBox{
+  top: 140vw;
+  left: 11vw;  
+}
+#YellowShadow.shadow{
+  top: 144.5vw;
+  left: 16vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+#Signup.Forms{
+  top: 28vw;
+  left: 20vw;
+}
+#Login.Forms{
+  top: 30vw;
+  left: 20vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+#SubmitCreate{
+  left: 27vw;
+  top: 85vw;
+}
+#SubmitLogin{
+  left: 27vw;
+  top: 85vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+.Hint{
+  width: 5vw;
+  height: 5vw;
+  border-radius: 5vw;
+}
+.HintBox{
+  border-radius: 2vw;
+
+}
+/*-------------------------------------------------------------------------------------------*/
+#NameHint{
+  top: 37vw;
+  left: 10vw;
+}
+#NameHintBox{
+  height: 21vw;
+  top: 38vw;
+  left: 20vw;
+}
+.Contacts{
+  font-size: 4vw;
+}
+#PassHint{
+  top: 69vw;
+  left: 10vw;
+}
+#PassHintBox{
+  height: 25vw;
+  top: 70vw;
+  left: 20vw;
+}
+.HintList {
+  font-size: 2.8vw; 
+}
+li.HintList{
+  margin-left: -5vw;
+  margin-top: 1vw;
+  margin-bottom: 1vw;
+  margin-right: -5vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+.Message{
+width: 40vw;
+height: 24vw;
+font-size: 3.4vw;
+}
+#AccountQuickLink{
+font-size: 3.5vw;
+margin-top: -1.5vw; 
+}
+#AccountQuickLink:hover{
+font-size: 3.5vw;
+}
+#AccountCreated{
+  top: 65vw;
+  left: 31vw;
+}
+#LoggedIn{
+  top: 180vw;
+  left: 31vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+#Create.Container{
+  top: 10vw;
+  left: 2vw;
+}   
+#Enter.Container{
+  top: 10vw;
+  left: 2vw;
+} 
+/*-------------------------------------------------------------------------------------------*/
+  input{
+      width: 40vw;
+      padding: 3vw 4vw;
+      margin-bottom: 6vw;
+      margin-top: 6vw;
+      font-size: 3vw;
+  }
+  .Container{
+      width: 80vw;
+      font-size: 6.5vw;
+      letter-spacing: 0.1cm;
+  }
+  p{
+      margin: 4vw;
+  }
+  button{
+      width: 25vw;
+      height: 10vw;
+      font-size: 4vw;
+  }
+/*-------------------------------------------------------------------------------------------*/ 
+.Footer {
+  top: 262vw;
+  text-align: center;
+}
+/*-------------------------------------------------------------------------------------------*/
+#LogoText{
+  margin-top: 5%;
+  margin-left: 0%;
+  width: 65%;
+}
+.ContactInfo{
+  margin-top: 4%;
+  margin-left: -15%;
+  margin-bottom: 5vw;
+      }
+.Contacts{
+  font-size: 4vw;
+  margin: 1.5vw 0;
+  margin-left: 0vw;
+}
+#ContactUs{
+  font-weight: lighter;
+  font-size: 7vw;
+}
+/*-------------------------------------------------------------------------------------------*/
+.SocialBox{
+padding-left: 5%;
+padding-right: 5%;
+padding-top: 3%;
+margin-bottom: 10vw;
+}
+.Icons{
+width: 75%;
+}
+/*-------------------------------------------------------------------------------------------*/
+#Instagram.SocialBox{
+    margin-top: 10%;
+    margin-left: 18vw;
+}
+#Twitter.SocialBox{
+    margin-top: -55%;
+    margin-left: 36.5vw;
+}
+#Youtube.SocialBox{
+    margin-top: -56.5%;
+    margin-left: 55vw;
+}
+#Facebook.SocialBox{
+    margin-top: -57%;
+    margin-left: 73vw;
+}     
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------*/
+@media (min-width: 250px) and (max-width: 360px) {
+ .HintBox{
+   width: 45vw;
+ }
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+@media (min-width: 361px) and (max-width: 470px) {
+.HintBox{
+  width: 43vw;
+}
+
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+@media (min-width: 471px) and (max-width: 698px) {
+.HintBox{
+  width: 43vw;
+}
+li.HintList {
+  margin-left: 1vw;
+  margin-top: 2vw; 
+}
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+@media (min-width: 699px) and (max-width: 800px) {
+.HintBox{
+  width: 27vw;
+}
+.HintList {
+  font-size: 1.6vw; 
+}
+}
+/*-----------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------*/
+@media (min-width: 700px) and (max-width: 1090px) {
+#Instagram.SocialBox{
+   margin-top: -15vw;
+   margin-left: 43vw;
+}
+#Twitter.SocialBox{
+   margin-top: -6.1vw;
+   margin-left: 53vw;
+}
+#Youtube.SocialBox{
+    margin-top: -6.2vw;
+    margin-left: 63vw;
+}  
+#Facebook.SocialBox{
+    margin-top: -6.3vw;
+    margin-left: 73vw;
+}
+}

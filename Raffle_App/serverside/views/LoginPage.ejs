@@ -1,0 +1,138 @@
+<!doctype html> 
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+<!------------------------------------------ CSS -------------------------------------------------------------->
+        <link rel="stylesheet" type="text/css" href="../CSS/LoginPage.css"> 
+<!------------------------------------- Jquery import --------------------------------------------------------->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<!------------------------------------------- JS -------------------------------------------------------------->
+        <script src="../Js/NavBar.js"></script>
+        <script src="../Js/LoginPage.js"></script>
+        <script src="../Js/FooterLinks.js"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
+            @import url('https://fonts.googleapis.com/css?family=Varela+Round');
+            </style>
+    </head>
+<body>
+<!-------------------------- Navigation bar on the top right corner ------------------------------------------->
+<!----------------------------- Rectangle used for menu dropdown ---------------------------------------------->
+<header>
+    <%- include('partials/header'); %>
+</header>
+<!------------------------------ Create account background box --------------------------------------------->
+<div id = "LeftBox" class="mainBox">
+    <div id="Create" class="Container">
+        <p>Enter a Raffle</p>
+    </div>
+    
+    <!------------- Message for successful creation to appear later --------->
+    <div id="AccountCreated" class="Message">
+        <p class="messageText">Your account was created.<br><br>Login and<br>Start Scanning!</p>
+    </div>
+    <!------------------------ Input forms for signing up -------------------->
+    <div id="RaffleSignup" class="Forms">
+        <form action= '/RaffleSignup' method='POST'>
+            <input class="createForms" type="text" placeholder="Username:" name="Username" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}"
+                   title="One number, uppercase and lowercase letters. At least 7 or more characters total" required>
+            <input class="createForms" type="email" placeholder="Email:" name="Email" required pattern="\S+"/>
+            </div>
+            <button id="EnterGuestRaffle" class="submit" type="submit">Enter Raffle</button>
+            </form>
+         
+    <!--- Hint box explaining username requirements appears on mouse hover over white circle --->
+    <div id="RaffleNameHint" class="Hint"></div>
+    <div id="RaffleNameHintBox" class="HintBox">
+        <ul>
+            <li class="HintList">Minimum of 5 characters.</li>
+            <li class="HintList">At least one letter.</li>
+            <li class="HintList">At least number.</li>
+        </ul>
+    </div>
+
+    <!----------------------------------------------------------------------->
+</div>
+
+<% if (locals.errors) { %>
+    <div id="UsernameTaken" class="HintBox" style="visibility: visible;">
+    <ul class="taken">
+        <% if (errors === "Username taken") { %>
+            <li  class="HintList">Username already exists</li>
+        <% } %>  
+            <% if (errors === "Account created") { %>
+              <li  class="HintList">Account created!<br>You can now Login</li>
+            <% }  else { %>
+              <li  class="HintList">Wrong password!</li>
+            <% } %>
+    </ul>
+    </div>
+ <% } %>
+
+<!--------------------- Background image/ box for logging in ------------------------------------------------>
+<div id = "RightBox" class="mainBox">
+    <!----------------------- Rectange with 'Enter' text -------------------->
+    <div id="Enter"class="Container">
+        <p>Sign Up</p>
+    </div>
+    <!------------- Message for successful logging in to appear later ------->
+    <div id="LoggedIn" class="Message">
+        <p  class="messageText">You are logged in!<br>Check your points:</p>
+        <!---------------- ----- Link to account page ----------------------->
+        <div>
+            <a id="AccountQuickLink" href="/AccountPage">My account</a>
+        </div>
+    <!----------------------------------------------------------------------->
+    </div>
+    <!------------------------ Input forms for logging in ------------------->
+    <div id="Login" class="Forms" style="display: none;">
+        <form action= '/dologin' method='POST'>
+         <input class="loginForms" type="name" placeholder="Username:" name="Username" required pattern="\S+">
+         <input class="loginForms" type="password" placeholder="Password:" name="Password" required pattern="\S+">
+    </div>
+
+    <!------------------------ Input forms for signing up -------------------->
+    <div id="Signup" class="Forms">
+        <form action= '/signup' method='POST'>
+            <input class="createForms" type="text" placeholder="Username:" name="Username" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}"
+                   title="One number, uppercase and lowercase letters. At least 7 or more characters total" required>
+            <input class="createForms" type="email" placeholder="Email:" name="Email" required pattern="\S+"/>
+            <input class="createForms" type="password" placeholder="Password:" name="Password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                   title="One number, uppercase and lowercase letters. At least 8 or more characters total" required>
+            </div>
+            <button id="SubmitCreate" type="submit">Create</button>
+            </form>
+         
+    <!--- Hint box explaining username requirements appears on mouse hover over white circle --->
+    <div id="NameHint" class="Hint"></div>
+    <div id="NameHintBox" class="HintBox">
+        <ul>
+            <li class="HintList">Minimum of 5 characters.</li>
+            <li class="HintList">At least one letter.</li>
+            <li class="HintList">At least number.</li>
+        </ul>
+    </div>
+    <!--- Hint box explaining password requirements appears on mouse hover over white circle --->
+    <div id="PassHint" class="Hint"></div>
+    <div id="PassHintBox" class="HintBox">
+        <ul>
+            <li class="HintList">Minimum of 8 characters.</li>
+            <li class="HintList">At least one upper case.</li>
+            <li class="HintList">At least one lower case.</li>
+            <li class="HintList">At least one number.</li>
+        </ul>
+    </div>
+    <!--------------------------- Enter/ Log in button ---------------------->
+    <button id="SubmitLogin" class="submit" type="submit" style="display: none;">Enter</button>
+    <!-- Button to toggle login/signup forms -->
+    <button id="ToggleLoginSignup" class="submit" type="button">Or Log In</button>
+</form>
+    <!----------------------------------------------------------------------->
+</div>
+
+<!-------------------------------------- Footer --------------------------------------------------------------->
+<footer>
+    <%- include('partials/footer'); %>
+</footer>
+</body>
