@@ -90,9 +90,29 @@ font-weight: bold;
     padding-right: 20%;
   }
 
+#DisplayRaffles, #SubmitRaffle, #CreateRaffle_btn{
+    background-color: #deeaff;
+    color: rgb(7, 13, 32);
+}
+#DisplayRaffles:hover,
+#SubmitRaffle:hover,
+#CreateRaffle_btn:hover {
+    background-color: rgb(22, 22, 22);
+    color: rgba(255, 255, 255, 0.92);
+    }
+
+/* Code for the custom scrollbar was generated 
+   with generative AI and then modified to suit: */
+
   /* For WebKit browsers (e.g., Chrome, Safari) */
 ::-webkit-scrollbar {
-    width: 1vw; /* Width of the scrollbar */
+    width: 1vw; 
+    visibility: hidden; /* Initially hide the scrollbar */
+    transition: visibility 0.5s; /* Add transition for smooth appearance */
+}
+
+::-webkit-scrollbar:hover {
+    visibility: visible; /* Show scrollbar on hover */
 }
 
 ::-webkit-scrollbar-track {

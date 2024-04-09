@@ -26,7 +26,7 @@
                 <% raffles.forEach(function(raffle) { %>
                     <br>
                         <p>Raffle: <%= raffle.name %></p>
-                        <p>Prize: <%= raffle.prize %></p>
+                        <p>Prize: <%= raffle.prize %>£</p>
                         <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>         
                     
                 <% }); %>

@@ -72,7 +72,6 @@ app.post('/signup', (req, res) => {
   }, function (err, result) {
 
     if (err) {
-      console.log(err);
       throw (err)
     }
     //if the username isn't in the db, add the new user
@@ -165,7 +164,7 @@ app.get("/AccountPage", (req, res) => {
               if (err) {
                   throw err;
               }
-              console.log(userRaffles);
+              //console.log(userRaffles);
               // Check if raffles is not defined or is empty
               if (!userRaffles || userRaffles.length === 0) {
                   // Render the AccountPage template with an empty array for raffles
@@ -319,7 +318,7 @@ app.post('/createRaffle', (req, res) => {
 
 // Function to render the AccountPage with a message and the current user
 function renderAccountPage(res, user,  errors) {
-  db.collection('raffles').find({ "user": user }).toArray((err, userRaffles) => {
+  db.collection('raffles').find({ "user": user.Username }).toArray((err, userRaffles) => {
     if (err) {
         throw err;
     }
