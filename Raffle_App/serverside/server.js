@@ -184,3 +184,22 @@ app.get('/logout', function (req, res) {
 });
 
 
+//deleting an account
+app.get("/delete", (req, res) => {
+  if (!req.session.loggedin) {  //if no login session transfer to the login page
+    res.redirect('LoginPage');
+    return;
+  }
+  db.collection('profile').deleteOne({ //find the current user and delete them 
+    "Username": obj.Username
+  }, function (err, result) {
+    if (err) {
+      throw (err)
+    }
+    res.redirect('/'); //and transfer to the root page
+    console.log("Account deleted");
+  });
+
+});
+
+
