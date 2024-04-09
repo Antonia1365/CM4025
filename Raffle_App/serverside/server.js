@@ -244,6 +244,7 @@ app.post('/createRaffle', (req, res) => {
   const name = req.body.name;
   const prize = req.body.prize;
   const drawDate = new Date(req.body.drawDate); // Convert drawDate to Date object
+  const user = obj.Username
 
   // Check if drawDate is in the past
   if (drawDate < new Date()) {
@@ -271,7 +272,8 @@ app.post('/createRaffle', (req, res) => {
     const newRaffle = {
       name: name,
       prize: prize,
-      drawDate: drawDate
+      drawDate: drawDate,
+      user: user
     };
 
     // Insert the new raffle into the database
@@ -284,6 +286,7 @@ app.post('/createRaffle', (req, res) => {
       }
 
       console.log('Raffle created successfully');
+      console.log(newRaffle);
       // Redirect to the AccountPage after successful creation
       renderAccountPage(res, obj, 'Success');
     });
