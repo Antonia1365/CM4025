@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../CSS/LoginPage.css"> 
+    <link rel="stylesheet" type="text/css" href="../CSS/AccountPage.css"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="../Js/NavBar.js"></script>
     <script src="../Js/LoginPage.js"></script>
@@ -39,7 +40,30 @@
             <p>Username: <%= account.Username %></p>
             <p>Email: <%= account.Email %></p>
             <p>Raffles Won: <%= account.RafflesWon || 0 %></p> <!-- Display raffles won, default to 0 if not present -->
-            <button id="EnterAccountRaffle" class="submit" type="submit">Enter</button>
+            <button id="EnterAccountRaffle" class="submit" type="submit">Enter Raffle </button>
+        </div>
+
+        <!----------------------------- Account status (active/ inactive) -------------------->
+        <div class="InfoBox">
+            <P class="statusText">Account status:</p>
+            <p id="Status" class="statusText">Active</p>
+        </div>
+<!--------------------------- Buttons for account deletion/ recovery ----------------->
+    <form action="/logout">
+        <button id="LogOut" class="Leave" type="submit">Log out</button>
+    </form>
+    <button id="Deactivate" class="Leave" type="submit">Delete Account</button> 
+        
+    </div>
+<!----------------------- Message to appear before deleting/ recovering ----------------------------------->
+    <div id="WarningScreen" hidden="">
+        <div id="WarningMessage">
+            <div id="ExitWarning" class="Hint"></div>
+            <p id = "WarningTitle" class="warning" ></p>
+            <p id = "MessageInfo" class="warning" ></p>
+            <form action="/delete">
+                <button id="FinalDeactivate" class="Leave" type="submit">Delete</button> 
+            </form>
         </div>
     </div>
 

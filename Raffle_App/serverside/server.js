@@ -175,3 +175,12 @@ app.get("/AccountPage", (req, res) => {
 });
 
 
+//the logout function
+app.get('/logout', function (req, res) {
+  req.session.loggedin = false;
+  req.session.destroy();
+  res.redirect('/');
+  console.log("Logged out");
+});
+
+
