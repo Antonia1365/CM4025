@@ -27,6 +27,7 @@
                     <p>Raffle: <%= raffle.name %></p>
                     <p>Prize: <%= raffle.prize %></p>
                     <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>
+                    <button id="EnterAccountRaffle" class="submit" type="submit">Enter</button>
                 </div>
             <% }); %>
         <% } else { %>
@@ -39,14 +40,13 @@
             <p id="Username"> <%= account.Username %> </p>
             <p>Username: <%= account.Username %></p>
             <p>Email: <%= account.Email %></p>
-            <p>Raffles Won: <%= account.RafflesWon || 0 %></p> <!-- Display raffles won, default to 0 if not present -->
-            <button id="EnterAccountRaffle" class="submit" type="submit">Enter Raffle </button>
-        </div>
-
-        <!----------------------------- Account status (active/ inactive) -------------------->
-        <div class="InfoBox">
-            <P class="statusText">Account status:</p>
-            <p id="Status" class="statusText">Active</p>
+            <p>Account Type: <%= account.AccountType %></p>
+                    <!-- Display different information based on account type -->
+        <% if (account.AccountType === 'Raffle Participant') { %>
+            <p>Unclaimed Prizes: 0</p>
+        <% } else if (account.AccountType === 'Raffle Holder') { %>
+            <p>Raffles Held: <%= account.RafflesHeld || 0 %></p>
+        <% } %>
         </div>
 <!--------------------------- Buttons for account deletion/ recovery ----------------->
     <form action="/logout">

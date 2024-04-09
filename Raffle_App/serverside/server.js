@@ -54,8 +54,7 @@ app.post('/signup', (req, res) => {
   var Username = req.body.Username;
   var Email = req.body.Email;
   var Password = req.body.Password;
-  var CodesScanned = 0;
-  var Discount = 0;
+  var AccountType = req.body.AccountType;
 
 
   var data = {
@@ -63,8 +62,7 @@ app.post('/signup', (req, res) => {
     "Username": Username,
     "Email": Email,
     "Password": Password,
-    "CodesScanned": CodesScanned,  //num of qr codes scanned 
-    "Discount": Discount   //num of discounts ready to be used
+   "AccountType": AccountType,
   }
 
   //search the db for an already existing username before adding 

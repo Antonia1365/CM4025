@@ -92,7 +92,13 @@
             <input class="createForms" type="email" placeholder="Email:" name="Email" required pattern="\S+"/>
             <input class="createForms" type="password" placeholder="Password:" name="Password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
                    title="One number, uppercase and lowercase letters. At least 8 or more characters total" required>
-            </div>
+                    <!-- Dropdown for choosing account type -->
+            <select name="AccountType" class="createForms" required>
+            <option value="" disabled selected>Select Account Type</option>
+            <option value="Raffle Holder">Raffle Holder</option>
+            <option value="Raffle Participant">Raffle Participant</option>
+            </select>
+    </div>
             <button id="SubmitCreate" class="submit" type="submit">Create</button>
             </form>
          
