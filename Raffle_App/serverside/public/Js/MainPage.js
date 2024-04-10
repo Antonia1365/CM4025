@@ -2,7 +2,7 @@ $(document).ready(function(){
 
   var raffleItems = document.querySelectorAll('.raffleItem');
   var currentIndex = 0;
-  var currentRaffle = null;
+  var currentRaffle = null; // Store the currently displayed raffle i.e chosen by user
 
   function showRaffle(index) {
       // Hide all raffles
@@ -10,18 +10,23 @@ $(document).ready(function(){
         item.style.display = 'none';
       });
 
-      // Show the raffle at the specified index
+      // Show the raffle at the index
       raffleItems[index].style.display = 'block';
 
-      // Store the details of the current raffle
+      // Store the current raffle
     currentRaffle = {
       name: raffleItems[index].querySelector('p:nth-of-type(1)').innerText.split(': ')[1],
       prize: raffleItems[index].querySelector('p:nth-of-type(2)').innerText.split(': ')[1],
-      drawDate: raffleItems[index].querySelector('p:nth-of-type(3)').innerText.split(': ')[1]
+      drawDate: raffleItems[index].querySelector('p:nth-of-type(3)').innerText.split(': ')[1],
+      tickets: raffleItems[index].dataset.tickets.split(',')
     };
+
+    console.log("currentRaffle");
   }
 
   showRaffle(currentIndex);
+  console.log("currentRaffle");
+  console.log(currentRaffle);
   
 
   document.getElementById('NextRaffleBtn').addEventListener('click', function() {
@@ -48,7 +53,8 @@ $(document).ready(function(){
         $("#ParticipateGuest").css("display", "none");
         $('#RaffleSignup').attr('novalidate', 'true');
         $('#currentRaffleInput').val(JSON.stringify(currentRaffle));
-       
+       // Save the raffle into a hidden field in the form
+       // Send it along with the user details to the participation logic 
     } 
   
     
@@ -60,7 +66,6 @@ $(document).ready(function(){
         raffleListDiv.style.display = "flex";
         $("#AccountLink").css("display", "block");
         $("#ParticipateGuest").css("display", "block");
-        $('#RaffleSignup').removeAttr('novalidate');
     }
   });
 }); 

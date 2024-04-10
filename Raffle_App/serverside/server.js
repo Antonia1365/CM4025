@@ -283,59 +283,81 @@ app.post('/createRaffle', (req, res) => {
 */
 
 
+// Function to generate a unique verification code for a ticket
+function generateUniqueTicket(existingTickets) {
+  let ticket;
+  do {
+      ticket = generateVerificationCode();
+  } while (existingTickets.includes(ticket));
+  return ticket;
+}
+
+
 app.post('/createRaffle', (req, res) => {
   // Retrieve data from the request body
   const name = req.body.name;
   const prize = req.body.prize;
   const drawDate = new Date(req.body.drawDate); // Convert drawDate to Date object
-  const user = obj.Username
+  const user = obj.Username;
 
   // Check if drawDate is in the past
   if (drawDate < new Date()) {
-    // Render the AccountPage with the error message and the current user
-    renderAccountPage(res, obj, 'Failed');
-    return;
-  }
-  // Check if a raffle with the same name already exists
-  db.collection('raffles').findOne({ name }, (err, existingRaffle) => {
-    if (err) {
-      console.error('Error checking existing raffle:', err);
       // Render the AccountPage with the error message and the current user
       renderAccountPage(res, obj, 'Failed');
       return;
-    }
-    
-    if (existingRaffle) {
-      // A raffle with the same name already exists
-      // Render the AccountPage with the error message and the current user
-      renderAccountPage(res, obj, 'Exists');
-      return;
-    }
+  }
 
-    // Create a new raffle object
-    const newRaffle = {
-      name: name,
-      prize: prize,
-      drawDate: drawDate,
-      user: user
-    };
-
-    // Insert the new raffle into the database
-    db.collection('raffles').insertOne(newRaffle, (err, result) => {
+  // Check if a raffle with the same name already exists
+  db.collection('raffles').findOne({ name }, (err, existingRaffle) => {
       if (err) {
-        console.error('Error creating raffle:', err);
-        // Render the AccountPage with the error message and the current user
-        renderAccountPage(res, obj, 'Failed');
-        return;
+          console.error('Error checking existing raffle:', err);
+          // Render the AccountPage with the error message and the current user
+          renderAccountPage(res, obj, 'Failed');
+          return;
       }
 
-      console.log('Raffle created successfully');
-      console.log(newRaffle);
-      // Redirect to the AccountPage after successful creation
-      renderAccountPage(res, obj, 'Success');
-    });
+      if (existingRaffle) {
+          // A raffle with the same name already exists
+          // Render the AccountPage with the error message and the current user
+          renderAccountPage(res, obj, 'Exists');
+          return;
+      }
+
+      // Generate 10 unique verification codes for tickets
+      const tickets = [];
+      while (tickets.length < 10) {
+          const newTicket = generateUniqueTicket(tickets);
+          tickets.push(newTicket);
+      }
+
+      // Create a new raffle object
+      const newRaffle = {
+          name: name,
+          prize: prize,
+          drawDate: drawDate,
+          user: user,
+          tickets: tickets
+      };
+
+      // Insert the new raffle into the database
+      db.collection('raffles').insertOne(newRaffle, (err, result) => {
+          if (err) {
+              console.error('Error creating raffle:', err);
+              // Render the AccountPage with the error message and the current user
+              renderAccountPage(res, obj, 'Failed');
+              return;
+          }
+
+          console.log('Raffle created successfully');
+          console.log(newRaffle);
+          // Redirect to the AccountPage after successful creation
+          renderAccountPage(res, obj, 'Success');
+      });
   });
 });
+
+
+
 
 // Function to render the AccountPage with a message and the current user
 function renderAccountPage(res, user,  errors) {
@@ -369,14 +391,17 @@ function generateVerificationCode() {
 }
 
 app.post('/RaffleSignup', async (req, res) => {
-  // Get data from the request body
-  var username = req.body.Username;
+
+  var username = req.body.Email; // Changed it to email
   var currentRaffle = JSON.parse(req.body.CurrentRaffle);
 
-  // Generate a verification code
-  var verificationCode = generateVerificationCode();
+  console.log("tickets"); 
+  console.log(currentRaffle.tickets); 
 
-  // Check if there's an existing draw document for the current raffle
+  // Generate a verification code
+  var verificationCode = generateVerificationCode(); // Is it still needed?
+
+  // Check if there's an existing draw instance for the current raffle
   db.collection('draws').findOne({ 'raffle.name': currentRaffle.name }, (err, existingDraw) => {
       if (err) {
           console.error('Error checking existing draw:', err);
@@ -385,21 +410,46 @@ app.post('/RaffleSignup', async (req, res) => {
       }
 
       if (existingDraw) {
-          // An existing draw document for the current raffle already exists
-          // Check if the username already exists in the participants array
-          if (existingDraw.participants.includes(username)) {
+          // If there is, then check if the user is already among the participants
+          
+          if (existingDraw.participants.some(participant => participant.username === username)) {
               // Username already exists in the participants array, display error message
               console.log('Username already exists in participants array');
-              res.render("LoginPage", {
+              res.render("LoginPage", { //Will need to render Main page
                   errors: "Username already exists in participants array"
               });
               return;
           }
 
-          // Add the new participant to the participants array
+          // Check if there are any available tickets (should never fall to this, but just in case)
+          if (!currentRaffle.tickets || currentRaffle.tickets.length === 0) {
+              console.log('No available tickets');
+              res.render("LoginPage", {
+                  errors: "No available tickets"
+              });
+              return;
+          }
+
+          // Get available tickets (not already taken by participants)
+          const availableTickets = currentRaffle.tickets.filter(ticket =>
+              !existingDraw.participants.some(participant => participant.ticket === ticket)
+          );
+
+          if (availableTickets.length === 0) {
+              console.log('No available tickets');
+              res.render("LoginPage", {
+                  errors: "No available tickets"
+              });
+              return;
+          }
+
+          // Randomly select a ticket from the available tickets
+          const selectedTicket = availableTickets[Math.floor(Math.random() * availableTickets.length)];
+
+          // Add the new participant to the participants array with the chosen ticket
           db.collection('draws').updateOne(
               { _id: existingDraw._id },
-              { $addToSet: { participants: username } },
+              { $addToSet: { participants: { username: username, ticket: selectedTicket } } },
               (err, result) => {
                   if (err) {
                       console.error('Error updating draw:', err);
@@ -412,11 +462,14 @@ app.post('/RaffleSignup', async (req, res) => {
               }
           );
       } else {
-          // No existing draw document for the current raffle found, insert a new draw document
+          // No existing draw for this raffle, create a new one
+          // Randomly select a ticket for the new participant
+          const selectedTicket = currentRaffle.tickets[Math.floor(Math.random() * currentRaffle.tickets.length)];
+          
           var newDraw = {
               verificationCode: verificationCode,
               raffle: currentRaffle,
-              participants: [username],
+              participants: [{ username: username, ticket: selectedTicket }],
               winner: null,
               date: new Date()
           };
@@ -435,6 +488,7 @@ app.post('/RaffleSignup', async (req, res) => {
       }
   });
 });
+
 
     /* Send the verification code to the user's email
   try {
