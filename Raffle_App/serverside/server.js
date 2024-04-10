@@ -359,28 +359,54 @@ app.post('/createRaffle', (req, res) => {
 
 
 
-// Function to render the AccountPage with a message and the current user
-function renderAccountPage(res, user,  errors) {
+// Helper function to render the Account page with an error message and the current user
+function renderAccountPage(res, user, errors) {
   db.collection('raffles').find({ "user": user.Username }).toArray((err, userRaffles) => {
     if (err) {
         throw err;
     }
     // Check if raffles is not defined or is empty
     if (!userRaffles || userRaffles.length === 0) {
-        // Render the AccountPage template with an empty array for raffles
+        // Initial empty array of raffles
         raffles = [];
-    } else {
-        // Render the AccountPage template with the retrieved raffles
-        raffles = userRaffles;
+        // Render the page with the provided message, user, and empty raffles array
+        res.render('AccountPage', {
+          account: user,
+          raffles: raffles,
+          errors: errors
+        });
+        return; // Exit the function early
     }
-    // Render the AccountPage with the provided message and user
-    res.render('AccountPage', {
-      account: user,
-      raffles: raffles || [], // Pass an empty array if raffles is undefined
-      errors: errors
+
+    // Look up draws associated with each raffle
+    var raffleIds = userRaffles.map(raffle => raffle._id);
+    db.collection('draws').find({ "raffle._id": { $in: raffleIds } }).toArray((drawErr, draws) => {
+      if (drawErr) {
+        throw drawErr;
+      }
+
+      // Filter out unavailable tickets for each raffle and create duplicates with available tickets
+      var rafflesWithAvailableTickets = userRaffles.map(raffle => {
+        var availableTickets = raffle.tickets.filter(ticket => {
+          // Check if the ticket is not participating in any draw for this raffle
+          return !draws.some(draw => {
+            return draw.raffle._id.equals(raffle._id) && draw.participants.some(participant => participant.ticket === ticket);
+          });
+        });
+        // Create a shallow copy of the raffle object and replace the tickets array with available tickets
+        return Object.assign({}, raffle, { tickets: availableTickets });
+      });
+
+      // Render the AccountPage with the provided message, user, and filtered raffles
+      res.render('AccountPage', {
+        account: user,
+        raffles: rafflesWithAvailableTickets,
+        errors: errors
+      });
     });
   });
 }
+
 
 
 //---------------------------------------------------------------------//

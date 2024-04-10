@@ -8,7 +8,8 @@ $(document).ready(function(){
     var raffleTaken = $("#RaffleTaken");
     var currentIndex = 0;
     var raffleBoxTitle = document.getElementById('RaffleBoxTitle');
-    
+    var raffleItems = document.querySelectorAll('.raffleItem');
+    var currentIndex = 0;
     
     
     if (raffleTaken.css("visibility") === "visible") {
@@ -17,11 +18,36 @@ $(document).ready(function(){
         }, 5000);
     }
 
+    function updateTicketDropdown() {
+      var currentRaffle = raffleItems[currentIndex]; // Get the current displayed raffle
+      var ticketDropdown = $('#ticketDropdown'); 
+      ticketDropdown.empty(); // Clear dropdown
+      console.log(ticketDropdown.length);
+      //console.log(currentRaffle.dataset.tickets);
+      var ticketsArr = currentRaffle.dataset.tickets.split(',')
+    ; // Get the list of tickets for the current raffle
+      if (ticketsArr.length > 0) {
+        //console.log(ticketsArr);
+
+        ticketsArr.forEach(function(ticket) {
+              ticketDropdown.append($('<option>', { value: ticket, text: ticket }));
+              //console.log(ticket);
+          });
+      } 
+      else {
+          ticketDropdown.append($('<option>', { value: '', text: 'No tickets available' }));
+      }
+      console.log("Dropdown element:", $('#ticketDropdown'));
+  }
+  
+  // Update dropdown when the page loads initially
+  updateTicketDropdown();
+
 
         // Initially hide the CreateRaffle section
         // When the button is clicked
     $('#CreateRaffle_btn').click(function() {
-        // Show the CreateRaffle section and hide the MyRaffle section
+       
         $("#CreateRaffle").css("display", "block");
         $("#MyRaffle").css("display", "none");
         $("#CreateRaffle_btn").css("display", "none");
@@ -32,7 +58,7 @@ $(document).ready(function(){
     });
 
     $('#DisplayRaffles').click(function() {
-        // Show the MyRaffle section and hide the CreateRaffle section
+        
         $("#CreateRaffle").css("display", "none");
         $("#MyRaffle").css("display", "block");
         $("#CreateRaffle_btn").css("display", "block");
@@ -44,8 +70,32 @@ $(document).ready(function(){
     });
 
 
-    var raffleItems = document.querySelectorAll('.raffleItem');
-    var currentIndex = 0;
+
+    $('#EnterRaffle_btn').click(function() {
+      
+      $("#EnterRaffle").css("display", "block");
+      $("#MyRaffle").css("display", "none");
+      $("#EnterRaffle_btn").css("display", "none");
+      $("#PrevRaffleBtn").css("display", "none");
+      $("#NextRaffleBtn").css("display", "none");
+      $("#RaffleBoxTitle").text("Enter a Raffle");
+      updateTicketDropdown();
+  });
+
+  
+  $('#BackToRaffleList').click(function() {
+   
+    $("#EnterRaffle").css("display", "none");
+    $("#MyRaffle").css("display", "block");
+    $("#EnterRaffle_btn").css("display", "block");
+    $("#PrevRaffleBtn").css("display", "inline-block");
+    $("#NextRaffleBtn").css("display", "inline-block");
+    $("#RaffleBoxTitle").text("Enter a Raffle");
+    //updateTicketDropdown();
+});
+
+
+
 
     function showRaffle(index) {
         // Hide all raffles
@@ -55,6 +105,7 @@ $(document).ready(function(){
 
         // Show the raffle at the specified index
         raffleItems[index].style.display = 'block';
+        updateTicketDropdown();
     }
 
     showRaffle(currentIndex);

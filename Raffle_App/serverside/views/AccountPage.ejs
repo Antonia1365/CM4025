@@ -27,7 +27,7 @@
             <% if (raffles.length > 0) { %>
                 <% raffles.forEach(function(raffle) { %>
 
-                    <div class="raffleItem">
+                    <div class="raffleItem" data-tickets="<%= raffle.tickets.join(',') %>">
                         <p>Raffle: <%= raffle.name %></p>
                         <p>Prize: <%= raffle.prize %>£</p>
                         <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>         
@@ -46,19 +46,47 @@
 
 
 
+    <% if (account.AccountType === "Raffle Holder") { %>
         <button id="CreateRaffle_btn" class="submit" type="submit">Create a Raffle</button>
-        
-            <div id = "CreateRaffle" class="ContainerDetails" style="display: none;" >
-                <form action="/createRaffle" method="POST">
-                    <input class="createForms"  type="text" name="name" placeholder="Raffle Name (up to 10 chars)" maxlength="10" pattern="[a-zA-Z0-9]{1,10}" required>
-                    <input class="createForms" type="text" name="prize" placeholder="Prize (in £, up to 10 digits)" pattern="\d{1,10}" required>
-                    <input class="createForms"  type="date" name="drawDate" placeholder="Draw Date" required>
-                    <button id="DisplayRaffles" class="submit" type="button">My Raffles</button>
-                    <button id="SubmitRaffle" class="submit" type="submit">Create Raffle</button>
+
+        <div id = "CreateRaffle" class="ContainerDetails" style="display: none;" >
+            <form action="/createRaffle" method="POST">
+                <input class="createForms"  type="text" name="name" placeholder="Raffle Name (up to 10 chars)" maxlength="10" pattern="[a-zA-Z0-9]{1,10}" required>
+                <input class="createForms" type="text" name="prize" placeholder="Prize (in £, up to 10 digits)" pattern="\d{1,10}" required>
+                <input class="createForms"  type="date" name="drawDate" placeholder="Draw Date" required>
+                <button id="DisplayRaffles" class="submit" type="button">My Raffles</button>
+                <button id="SubmitRaffle" class="submit" type="submit">Create Raffle</button>
+                
+            </form>
+            
+        </div>
+        <% } else { %>
+            <button id="EnterRaffle_btn" class="submit" type="submit">Enter Raffle</button>
+            <div id="EnterRaffle" class="ContainerDetails" style="display: none;">
+                <p id="ChooseTicketTitle"> Choose a ticket</p>
+                <form action="/enterRaffle" method="POST">
+                    <!-- Dropdown menu for selecting a ticket -->
+                    <select id="ticketDropdown" name="ticket" class="createForms" required>
+                        <% if (raffles.length > 0) { %>
+                            <% raffles[0].tickets.forEach(function(ticket) { %>
+                                <option value="<%= ticket %>"><%= ticket %></option>
+                            <% }); %>
+                        <% } else { %>
+                            <option value="" disabled>No tickets available</option>
+                        <% } %>
+                    </select>
+                    <!-- Hidden input field for storing the user's email -->
+                    <input type="hidden" name="userEmail" value="<%= account.email %>" />
+                    <!-- Buttons for form submission -->
+                    <button id="SubmitRaffle" class="submit" type="submit">Enter Raffle</button>
                     
                 </form>
-                
+                <button id="BackToRaffleList" class="submit">Back</button>
             </div>
+        <% } %>
+        
+        
+            
         
             
         <!-- Define hidden message divs -->
