@@ -19,9 +19,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-
 app.use("/css", express.static(__dirname + "public/CSS"));
 app.use("/images", express.static(__dirname + " public/Images"));
 app.use("/js", express.static(__dirname + "public/Js"));
@@ -40,9 +37,9 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, fu
   console.log('listening on 8080')
 })
 
-app.get("/", (req, res) => {
-          // For other account types, find raffles with draw dates greater than the current date
-          const currentDate = new Date();
+//---------------------------------------------------------------------------//
+function renderMainPage(req, res) {
+  const currentDate = new Date();
           db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
               if (err) {
                   throw err;
@@ -56,6 +53,13 @@ app.get("/", (req, res) => {
                   res.render('MainPage', {raffles: allRaffles });
               }
           });
+}
+
+
+
+
+app.get("/", (req, res) => {
+  renderMainPage(req, res);
 
 });
 
@@ -357,5 +361,89 @@ function renderAccountPage(res, user,  errors) {
 }
 
 
+//---------------------------------------------------------------------//
+// Function to generate a random verification code
+function generateVerificationCode() {
+  // Generate a random code (you can adjust the length as needed)
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
 
+app.post('/RaffleSignup', async (req, res) => {
+  // Get data from the request body
+  var username = req.body.Username;
+  var currentRaffle = JSON.parse(req.body.CurrentRaffle);
 
+  // Generate a verification code
+  var verificationCode = generateVerificationCode();
+
+  // Check if there's an existing draw document for the current raffle
+  db.collection('draws').findOne({ 'raffle.name': currentRaffle.name }, (err, existingDraw) => {
+      if (err) {
+          console.error('Error checking existing draw:', err);
+          renderMainPage(req, res);
+          return;
+      }
+
+      if (existingDraw) {
+          // An existing draw document for the current raffle already exists
+          // Check if the username already exists in the participants array
+          if (existingDraw.participants.includes(username)) {
+              // Username already exists in the participants array, display error message
+              console.log('Username already exists in participants array');
+              res.render("LoginPage", {
+                  errors: "Username already exists in participants array"
+              });
+              return;
+          }
+
+          // Add the new participant to the participants array
+          db.collection('draws').updateOne(
+              { _id: existingDraw._id },
+              { $addToSet: { participants: username } },
+              (err, result) => {
+                  if (err) {
+                      console.error('Error updating draw:', err);
+                      renderMainPage(req, res);
+                      return;
+                  }
+                  console.log('Participant added to existing draw successfully');
+                  renderMainPage(req, res);
+                  console.log("Verification code sent. Please check your email.")
+              }
+          );
+      } else {
+          // No existing draw document for the current raffle found, insert a new draw document
+          var newDraw = {
+              verificationCode: verificationCode,
+              raffle: currentRaffle,
+              participants: [username],
+              winner: null,
+              date: new Date()
+          };
+
+          db.collection('draws').insertOne(newDraw, (err, result) => {
+              if (err) {
+                  console.error('Error storing draw: ', err);
+                  renderMainPage(req, res);
+                  return;
+              }
+
+              console.log('New draw stored successfully');
+              renderMainPage(req, res);
+              console.log("Verification code sent. Please check your email.")
+          });
+      }
+  });
+});
+
+    /* Send the verification code to the user's email
+  try {
+    await sendVerificationCode(email, verificationCode);
+  } catch (error) {
+    console.error('Error sending verification code:', error);
+    res.render("LoginPage", {
+      errors: "Failed to send verification code"
+    });
+    return;
+  }
+*/

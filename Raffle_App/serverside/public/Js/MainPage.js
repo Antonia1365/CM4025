@@ -2,6 +2,7 @@ $(document).ready(function(){
 
   var raffleItems = document.querySelectorAll('.raffleItem');
   var currentIndex = 0;
+  var currentRaffle = null;
 
   function showRaffle(index) {
       // Hide all raffles
@@ -11,6 +12,13 @@ $(document).ready(function(){
 
       // Show the raffle at the specified index
       raffleItems[index].style.display = 'block';
+
+      // Store the details of the current raffle
+    currentRaffle = {
+      name: raffleItems[index].querySelector('p:nth-of-type(1)').innerText.split(': ')[1],
+      prize: raffleItems[index].querySelector('p:nth-of-type(2)').innerText.split(': ')[1],
+      drawDate: raffleItems[index].querySelector('p:nth-of-type(3)').innerText.split(': ')[1]
+    };
   }
 
   showRaffle(currentIndex);
@@ -39,6 +47,7 @@ $(document).ready(function(){
         $("#AccountLink").css("display", "none");
         $("#ParticipateGuest").css("display", "none");
         $('#RaffleSignup').attr('novalidate', 'true');
+        $('#currentRaffleInput').val(JSON.stringify(currentRaffle));
        
     } 
   

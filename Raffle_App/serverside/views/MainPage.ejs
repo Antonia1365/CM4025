@@ -60,6 +60,7 @@
         <input class="createForms" type="text" placeholder="Alias:" name="Username" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}"
                title="One number, uppercase and lowercase letters. At least 7 or more characters total" required>
         <input class="createForms" type="email" placeholder="Email:" name="Email" required pattern="\S+"/>
+        <input type="hidden" id="currentRaffleInput" name="CurrentRaffle" />
         </div>
         <button id="EnterGuestRaffle" class="submit" type="submit">Enter Raffle</button>
         <button id="ToggleParticipate" class="submit">Back</button>
