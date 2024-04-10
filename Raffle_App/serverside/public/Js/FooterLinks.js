@@ -1,4 +1,4 @@
-$(document).ready(function(){
+/*$(document).ready(function(){
 
 document.getElementById("Instagram").onclick = function () {
     location.href = "https://www.instagram.com/";
@@ -13,4 +13,4 @@ document.getElementById("Instagram").onclick = function () {
     location.href = "https://www.facebook.com/";
   };
 
-}); 
+}); */

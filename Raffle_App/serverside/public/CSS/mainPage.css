@@ -1,0 +1,249 @@
+body {
+  /*-----------------------------------------------------------------------------------------------------------*/
+  /* Background image -----------------------------------------------------------------------------------------*/
+      background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)),
+      url(../Images/Raffle-Tickets.jpg) no-repeat center center fixed; 
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover; 
+      font-family: Arial,Helvetica,lighter;
+  }
+  /*-----------------------------------------------------------------------------------------------------------*/
+  .Footer{
+    position: absolute;
+    max-width: 100%;
+    top: 90vw;
+    right: 0;
+    left: 0;
+    height: 35vw;
+    background-color:white;  
+  }
+
+  #LogoText{
+    margin-top: 2vw;
+    margin-left: 5vw;
+    width: 10%;
+    }
+    .ContactInfo{
+    margin-top: 5vw;
+    margin-left: 2vw;
+    margin-bottom: 8vw;
+    }
+    li.Contacts {
+    font-family: 'Calibri';
+    font-size: 1.5vw;
+    list-style-type: none;
+    margin: 1.5vw 0;
+    letter-spacing: 0.03cm;
+    }
+    #ContactUs{
+    font-size: 2.4vw;
+    }
+    /*-------------------------------------------------------------------------------------------*/
+    .SocialLinks{
+    position: absolute;
+    width: 35%;
+    }    
+    .SocialBox{
+    width: 20%;
+    border-radius: 15%;
+    text-align: center;
+    background-color:#fafafaef;
+    transition: all 0.25s ease-in;
+    }
+    .Icons{
+    width: 50%;
+    padding-top: 15%;
+    padding-bottom: 15%;
+    }
+    
+    /*-------------------------------------------------------------------------------------------*/
+    #Instagram.SocialBox{
+    margin-top: -15vw;
+    margin-left: 43vw;
+    }
+    #Twitter.SocialBox{
+      margin-top: -6vw;
+      margin-left: 53vw;
+    }
+    #Youtube.SocialBox{
+      margin-top: -6vw;
+      margin-left: 63vw;
+    }
+    #Facebook.SocialBox{
+      margin-top: -6vw;
+      margin-left: 73vw;
+    }
+    /*-------------------------------------------------------------------------------------------*/  
+    #Instagram:hover{
+      box-shadow: 0vw 1vw 1vw 0vw #fbae5036;
+      background-color:#fafafa2a;
+    }
+    #Twitter:hover{
+      box-shadow: 0vw 1vw 1vw 0vw #4ac8ee36;
+      background-color:#fafafa2a;
+    }
+    #Youtube:hover{
+      box-shadow: 0vw 1vw 1vw 0vw #fc58582a;
+      background-color:#fafafa2a;
+    }
+    #Facebook:hover{
+      box-shadow: 0vw 1vw 1vw 0vw #557bf72a;
+      background-color:#fafafa2a;
+    }
+
+  .title{
+      font-size: 220%;
+      font-weight: bold;
+      color:#2353c3;
+  }
+
+ #TitleParticipate{
+  margin-top: -10vw;
+ } 
+    
+    .outerBox {
+      position: absolute;
+      top: calc(50% + 30vh); /* Adjust 20px as needed to push it down slightly */
+      left: calc(50% + 20px); /* Adjust 20px as needed to push it right slightly */
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: calc(100vw - 20px); /* Adjust 90vw and 40px as needed */
+      height: calc(100vh - 20px); /* Adjust 90vh and 40px as needed */
+      max-width: 80vw; 
+      max-height: 100vh; 
+      border-radius: 4vw;
+      box-shadow: 0 1.5vw 1.5vw 0 rgba(0, 0, 0, 0.205), 0 2.5vw 2.5vw 0 rgba(0, 0, 0, 0.158);
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+  }
+  
+  #ParticipationButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+
+
+/* Input forms ----------------------------------------------------------------------------------------------*/
+form {
+  border: 0.5vw solid rgba(255, 255, 255, 0);
+  }
+  .Forms{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 17vw;
+  }
+  
+  /*-------------------------------------------------------------------------------------------*/
+  input{
+  width: 27vw;
+  padding: 1.3vw 2.3vw;
+  margin-bottom: 2vw;
+  margin-top: 1vw;
+  display: block;
+  border: 0.3vw solid #ffffffed;
+  border-radius: 1vw;
+  box-sizing: border-box;
+  font-weight: lighter;
+  font-size: 1.5vw;
+  background-color: rgba(251, 251, 251, 0.895);
+  -webkit-border-radius: 2vw;
+    -moz-border-radius: 2vw;
+  border-radius: 1vw;
+  
+  -webkit-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+    -moz-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+      box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+  }
+  ::placeholder{
+  color: rgba(49, 49, 49, 0.616);
+  }
+  label{
+  color: rgba(49, 49, 49, 0.616);
+  font-weight: bold;
+  font-size: 1.5vw;
+  display: block;
+  width: 7vw;
+  margin-left: -1vw;
+  margin-top: 1vw;;
+  float: left;
+  }
+  label::after{
+  content: " ";
+  }
+  select{
+  width: 20vw;
+  padding: 1.3vw 2.3vw;
+  margin-bottom: 2vw;
+  display: block;
+  font-weight: lighter;
+  font-size: 1.5vw;
+  -webkit-border-radius: 2vw;
+  -moz-border-radius: 2vw;
+  border-radius: 1vw;
+  
+  -webkit-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+    -moz-box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+      box-shadow: 0vw 0vw 1vw rgba(0, 0, 0, 0.129);
+  }
+
+  
+
+  /* Hints for pass----------------------------------------------------------------*/
+.Hint{
+  position: absolute;
+  z-index: 5;
+  background-color: #fafafaef;
+  width: 2.3vw;
+  height: 2.3vw;
+  border-radius: 3vw;
+  box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.089), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.26);
+  }
+  
+  .Hint:hover{
+  background-color:rgba(22, 22, 22, 0.746);
+  }
+  
+  .HintBox{
+  position: absolute;
+  z-index: 6;
+  width: 18vw;
+  background-color: white;
+  border-radius: 2vw;
+  color: black;
+  display: table;   
+  vertical-align: center;
+  box-shadow: 0 0.2vw 0.5vw 0 rgba(0, 0, 0, 0.089), 0 0.5vw 1vw 0 rgba(0, 0, 0, 0.26);
+  text-align: left;
+  visibility: hidden;
+  
+  }
+  li{
+    list-style-type: none;
+  }
+  /*-------------------------------------------------------------------------------------------*/
+
+#RaffleNameHint{
+    top: 20vw;
+    left: 3vw;
+  }
+  
+#RaffleNameHintBox{
+    top: 20vw;
+    left: 7vw;
+  }
+  .HintList {
+  margin-left: -1vw;
+  margin-top: 1vw;
+  }
+  

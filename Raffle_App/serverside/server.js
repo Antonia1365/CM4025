@@ -41,8 +41,24 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, fu
 })
 
 app.get("/", (req, res) => {
-  res.render("LoginPage");
+          // For other account types, find raffles with draw dates greater than the current date
+          const currentDate = new Date();
+          db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
+              if (err) {
+                  throw err;
+              }
+              // Check if raffles is not defined or is empty
+              if (!allRaffles || allRaffles.length === 0) {
+                  // Render the AccountPage template with an empty array for raffles
+                  res.render('MainPage', { raffles: [] });
+              } else {
+                  // Render the AccountPage template with the retrieved raffles
+                  res.render('MainPage', {raffles: allRaffles });
+              }
+          });
+
 });
+
 
 app.get("/LoginPage", (req, res) => {
   res.render("LoginPage");

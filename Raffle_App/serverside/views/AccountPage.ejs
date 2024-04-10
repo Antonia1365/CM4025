@@ -20,21 +20,32 @@
         <% include('partials/header'); %>
     </header>
 
-    <div id="LeftBox" class="mainBox" style= "display: flex; flex-direction: column; justify-content: center; align-items: center;" >
+    <div id="RightBox" class="mainBox" style= "display: flex; flex-direction: column; justify-content: center; align-items: center;" >
+        <p id="RaffleBoxTitle"> Raffles Held </p>
+        <div id="CarouselContainer" >
         <div id = "MyRaffle" class="ContainerDetails">
             <% if (raffles.length > 0) { %>
                 <% raffles.forEach(function(raffle) { %>
-                    <br>
+
+                    <div class="raffleItem">
                         <p>Raffle: <%= raffle.name %></p>
                         <p>Prize: <%= raffle.prize %>£</p>
                         <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>         
-                    
+                    </div>
                 <% }); %>
             <% } else { %>
                 <p>No raffles available</p>
             <% } %>
             
         </div>
+        <div id="CarouselButtons">
+            <button id="NextRaffleBtn"></button>
+            <button id="PrevRaffleBtn"></button>
+        </div>
+    </div>
+
+
+
         <button id="CreateRaffle_btn" class="submit" type="submit">Create a Raffle</button>
         
             <div id = "CreateRaffle" class="ContainerDetails" style="display: none;" >
@@ -73,9 +84,9 @@
 
     
 
-    <div id="RightBox" class="mainBox">
+    <div id="LeftBox" class="mainBox">
+        <p id="Username"> <%= account.Username %> </p>
         <div id="AccountDetails" class="ContainerDetails">
-            <p id="Username"> <%= account.Username %> </p>
             <p>Username: <%= account.Username %></p>
             <p>Email: <%= account.Email %></p>
             <p>Account Type: <%= account.AccountType %></p>
@@ -87,11 +98,12 @@
         <% } %>
         </div>
 <!--------------------------- Buttons for account deletion/ recovery ----------------->
+<div id="EraseAccount">
     <form action="/logout">
         <button id="LogOut" class="Leave" type="submit">Log out</button>
     </form>
     <button id="Deactivate" class="Leave" type="submit">Delete Account</button> 
-        
+</div>
     </div>
 <!----------------------- Message to appear before deleting/ recovering ----------------------------------->
     <div id="WarningScreen" hidden="">
@@ -106,7 +118,7 @@
     </div>
 
     <footer>
-        <% include('partials/footer'); %>
+        <%- include('partials/footer'); %>
     </footer>
 </body>
-</html>
+

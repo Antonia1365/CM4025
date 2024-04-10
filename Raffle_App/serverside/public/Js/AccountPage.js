@@ -1,14 +1,16 @@
 $(document).ready(function(){  
+
    // All the necessary vars
-    var recovery = document.getElementById("Recover");
     var deactivateButton = document.getElementById("Deactivate");
     var warningScreen = document.getElementById("WarningScreen");
     var warningTitle = document.getElementById("WarningTitle");
     var messageInfo = document.getElementById("MessageInfo");
     var raffleTaken = $("#RaffleTaken");
+    var currentIndex = 0;
+    var raffleBoxTitle = document.getElementById('RaffleBoxTitle');
     
     
-
+    
     if (raffleTaken.css("visibility") === "visible") {
         setTimeout(function() {
             raffleTaken.css("visibility", "hidden");
@@ -17,14 +19,16 @@ $(document).ready(function(){
 
 
         // Initially hide the CreateRaffle section
-        
-
         // When the button is clicked
     $('#CreateRaffle_btn').click(function() {
         // Show the CreateRaffle section and hide the MyRaffle section
         $("#CreateRaffle").css("display", "block");
         $("#MyRaffle").css("display", "none");
         $("#CreateRaffle_btn").css("display", "none");
+        $("#PrevRaffleBtn").css("display", "none");
+        $("#NextRaffleBtn").css("display", "none");
+        raffleBoxTitle.textContent = "Create a new Raffle";
+        
     });
 
     $('#DisplayRaffles').click(function() {
@@ -32,10 +36,40 @@ $(document).ready(function(){
         $("#CreateRaffle").css("display", "none");
         $("#MyRaffle").css("display", "block");
         $("#CreateRaffle_btn").css("display", "block");
+        $("#PrevRaffleBtn").css("display", "inline-block");
+        $("#NextRaffleBtn").css("display", "inline-block");
+        
+        raffleBoxTitle.textContent = "Raffles Held";
+        
     });
 
 
+    var raffleItems = document.querySelectorAll('.raffleItem');
+    var currentIndex = 0;
+
+    function showRaffle(index) {
+        // Hide all raffles
+        raffleItems.forEach(function(item) {
+          item.style.display = 'none';
+        });
+
+        // Show the raffle at the specified index
+        raffleItems[index].style.display = 'block';
+    }
+
+    showRaffle(currentIndex);
     
+
+    document.getElementById('NextRaffleBtn').addEventListener('click', function() {
+        currentIndex = (currentIndex + 1) % raffleItems.length;
+        showRaffle(currentIndex);
+    });
+
+    document.getElementById('PrevRaffleBtn').addEventListener('click', function() {
+        currentIndex = (currentIndex - 1 + raffleItems.length) % raffleItems.length;
+        showRaffle(currentIndex);
+    });
+   
 
 // Function which displays the message box with explanation on when the account
 // will be deleted and when it is recoverable

@@ -1,8 +1,11 @@
 #Username{
-    font-size: 3vw;
+    position: absolute;
+    top: 5%;
+    font-size: 220%;
     font-weight: bold;
-    color: #2353c3;
+    color:#eff5ff;
 }
+
 
 
 #WarningScreen{
@@ -83,25 +86,98 @@ font-weight: bold;
     box-shadow:  0 0.8vw 1vw 0 rgba(0, 0, 0, 0.089), 0 0.8vw 1vw 0 rgba(0, 0, 0, 0.164);
 }
 
+.Leave   {
+    background-color: #eff5ff;
+    color: #0f3283;
+
+}
+#EraseAccount {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+}
+#AccountDetails{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 20%;
+    font-size: 20px;
+}
+#LeftBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    color: #eff5ff;
+}
+
 #MyRaffle {
-    max-height: 80%; /* Set a maximum height for the scrollable area */
-    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 80%; 
+    overflow-y: auto; 
     text-align: left;
-    padding-right: 20%;
   }
 
 #DisplayRaffles, #SubmitRaffle, #CreateRaffle_btn{
-    background-color: #deeaff;
-    color: rgb(7, 13, 32);
+    background-color: #2353c3;
+    color: #eff5ff;
 }
 #DisplayRaffles:hover,
 #SubmitRaffle:hover,
-#CreateRaffle_btn:hover {
-    background-color: rgb(22, 22, 22);
-    color: rgba(255, 255, 255, 0.92);
+#CreateRaffle_btn:hover,
+#PrevRaffleBtn:hover,
+#NextRaffleBtn:hover,
+#Deactivate:hover,
+#LogOut:hover
+{
+    background-color:  rgb(22, 22, 22);
+    color: #eff5ff;
     }
 
-/* Code for the custom scrollbar was generated 
+
+.raffleItem{
+    display: block;
+
+    margin-bottom: 20%; 
+    font-size: 20px; 
+    color: #2353c3;
+    margin-top: 20%;
+    
+}
+
+#RaffleBoxTitle {
+    position: absolute;
+    top: 5%;
+    font-size: 200%;
+    font-weight: bold;
+    color: #2353c3;
+    
+}
+
+#CarouselButtons {
+    text-align: center;
+}
+
+#PrevRaffleBtn,
+#NextRaffleBtn {
+    background-color: transparent;
+    border: 5px solid #2353c3;
+    border-radius: 50%; 
+    width: 60px; 
+    height: 60px; 
+    margin-left: 10%; 
+    margin-right: 10%;
+    cursor: pointer;
+}
+
+
+
+
+
+
+/* Code for the custom scrollbar and arrow buttons was generated 
    with generative AI and then modified to suit: */
 
   /* For WebKit browsers (e.g., Chrome, Safari) */
@@ -126,4 +202,19 @@ font-weight: bold;
 
 ::-webkit-scrollbar-thumb:hover {
     background: #b5cdf8; /* Thumb color on hover */
+}
+
+/* Styling the arrows */
+#PrevRaffleBtn::before,
+#NextRaffleBtn::before {
+    content: "";
+    display: inline-block;
+    border: solid #2353c3;
+    border-width: 0 2px 2px 0;
+    padding: 3px;
+    transform: rotate(-45deg);
+}
+
+#NextRaffleBtn::before {
+    transform: rotate(135deg);
 }
