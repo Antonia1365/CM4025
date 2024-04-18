@@ -9,7 +9,8 @@
     <script src="../Js/NavBar.js"></script>
     <script src="../Js/LoginPage.js"></script>
     <script src="../Js/AccountPage.js"></script>
-    <script src="../Js/FooterLinks.js"></script>
+    <script src="../Js/FooterLinks.js"></script> 
+        
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
         @import url('https://fonts.googleapis.com/css?family=Varela+Round');
@@ -27,7 +28,7 @@
             <% if (raffles.length > 0) { %>
                 <% raffles.forEach(function(raffle) { %>
 
-                    <div class="raffleItem" data-tickets="<%= raffle.tickets.join(',') %>">
+                    <div class="raffleItem">
                         <p>Raffle: <%= raffle.name %></p>
                         <p>Prize: <%= raffle.prize %>£</p>
                         <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>         
@@ -65,10 +66,9 @@
             <div id="EnterRaffle" class="ContainerDetails" style="display: none;">
                 <p id="ChooseTicketTitle"> Choose a ticket</p>
                 <form action="/enterRaffle" method="POST">
-                    <!-- Dropdown menu for selecting a ticket -->
                     <select id="ticketDropdown" name="ticket" class="createForms" required>
-                        <% if (raffles.length > 0) { %>
-                            <% raffles[0].tickets.forEach(function(ticket) { %>
+                        <% if (luckyNumbers && luckyNumbers.length > 0) { %>
+                            <% luckyNumbers.forEach(function(ticket) { %>
                                 <option value="<%= ticket %>"><%= ticket %></option>
                             <% }); %>
                         <% } else { %>

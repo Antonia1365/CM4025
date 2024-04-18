@@ -18,7 +18,6 @@ $(document).ready(function(){
       name: raffleItems[index].querySelector('p:nth-of-type(1)').innerText.split(': ')[1],
       prize: raffleItems[index].querySelector('p:nth-of-type(2)').innerText.split(': ')[1],
       drawDate: raffleItems[index].querySelector('p:nth-of-type(3)').innerText.split(': ')[1],
-      tickets: raffleItems[index].dataset.tickets.split(',')
     };
 
     console.log("currentRaffle");

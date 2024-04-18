@@ -34,7 +34,7 @@
             <% if (raffles.length > 0) { %>
                 <% raffles.forEach(function(raffle) { %>
                     <!--- Display one Raffle at a time -->
-                    <div class="raffleItem" data-tickets="<%= raffle.tickets.join(',') %>">
+                    <div class="raffleItem"">
                         <p>Raffle: <%= raffle.name %></p>
                         <p>Prize: <%= raffle.prize %>£</p>
                         <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>         

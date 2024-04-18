@@ -140,18 +140,10 @@ app.post('/dologin', function (req, res) {
       req.session.userId = result._id;
       obj = result;
       // Retrieve raffles from the database
-      db.collection('raffles').find().toArray((err, raffles) => {
-        if (err) {
-          throw err;
-        }
-        // Pass account and raffles to the AccountPage template
-        res.render('AccountPage', {
-          account: result,
-          raffles: raffles || [] // Pass an empty array if raffles is undefined
-        });
-      });
+      renderAccountPage(res, result, err);
       console.log("Logged in")
-    } else {
+    } 
+    else {
       res.render("LoginPage", {
         errors: "Wrong pass"
       })
@@ -179,39 +171,7 @@ app.get("/AccountPage", (req, res) => {
       console.log(user.Username);
       console.log(user.AccountType);
 
-      if (user.AccountType === 'Raffle Holder') {
-          // Find raffles created by the current user
-          db.collection('raffles').find({ "user": user.Username }).toArray((err, userRaffles) => {
-              if (err) {
-                  throw err;
-              }
-              //console.log(userRaffles);
-              // Check if raffles is not defined or is empty
-              if (!userRaffles || userRaffles.length === 0) {
-                  // Render the AccountPage template with an empty array for raffles
-                  res.render('AccountPage', { account: user, raffles: [] });
-              } else {
-                  // Render the AccountPage template with the retrieved raffles
-                  res.render('AccountPage', { account: user, raffles: userRaffles });
-              }
-          });
-      } else {
-          // For other account types, find raffles with draw dates greater than the current date
-          const currentDate = new Date();
-          db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
-              if (err) {
-                  throw err;
-              }
-              // Check if raffles is not defined or is empty
-              if (!allRaffles || allRaffles.length === 0) {
-                  // Render the AccountPage template with an empty array for raffles
-                  res.render('AccountPage', { account: user, raffles: [] });
-              } else {
-                  // Render the AccountPage template with the retrieved raffles
-                  res.render('AccountPage', { account: user, raffles: allRaffles });
-              }
-          });
-      }
+      renderAccountPage(res, obj, err);
   });
 });
 
@@ -364,51 +324,62 @@ app.post('/createRaffle', (req, res) => {
 
 // Helper function to render the Account page with an error message and the current user
 function renderAccountPage(res, user, errors) {
-  db.collection('raffles').find({ "user": user.Username }).toArray((err, userRaffles) => {
-    if (err) {
-        throw err;
+  var allDigits = [];
+  
+  // Extract digits from each luckyNumbers instance and create a single array
+  db.collection('luckyNumbers').find({}).toArray((luckyNumbersErr, luckyNumbers) => {
+    if (luckyNumbersErr) {
+      throw luckyNumbersErr;
     }
-    // Check if raffles is not defined or is empty
-    if (!userRaffles || userRaffles.length === 0) {
-        // Initial empty array of raffles
-        raffles = [];
-        // Render the page with the provided message, user, and empty raffles array
+    
+    // Function was taken from ChatGTP
+    allDigits = luckyNumbers.reduce((accumulator, currentValue) => {
+      return accumulator.concat(currentValue.digit);
+    }, []);
+
+    // Create 5 lucky tickets to choose
+    const tickets = Array.from({ length: 5 }, () => {
+      // Choose 3 random lucky digits 
+      const randomDigits = Array.from({ length: 3 }, () => allDigits[Math.floor(Math.random() * allDigits.length)]);
+      // Generate 3 more random digits
+      const additionalRandomDigits = Array.from({ length: 3 }, () => Math.floor(Math.random() * 10));
+      // Concatenate and make a ticket
+      return [...randomDigits, ...additionalRandomDigits].join('');
+    });
+
+    // Determine the user's account type and fetch appropriate data
+    if (user.AccountType === "Raffle Holder") {
+      // Extract digits from each raffle instance and create a single array
+      db.collection('raffles').find({ "user": user.Username }).toArray((err, userRaffles) => {
+        if (err) {
+          throw err;
+        }
         res.render('AccountPage', {
           account: user,
-          raffles: raffles,
+          raffles: userRaffles || [],
+          luckyNumbers: tickets,
           errors: errors
         });
-        return; // Exit the function early
-    }
-
-    // Look up draws associated with each raffle
-    var raffleIds = userRaffles.map(raffle => raffle._id);
-    db.collection('draws').find({ "raffle._id": { $in: raffleIds } }).toArray((drawErr, draws) => {
-      if (drawErr) {
-        throw drawErr;
-      }
-
-      // Filter out unavailable tickets for each raffle and create duplicates with available tickets
-      var rafflesWithAvailableTickets = userRaffles.map(raffle => {
-        var availableTickets = raffle.tickets.filter(ticket => {
-          // Check if the ticket is not participating in any draw for this raffle
-          return !draws.some(draw => {
-            return draw.raffle._id.equals(raffle._id) && draw.participants.some(participant => participant.ticket === ticket);
-          });
+      });
+    } else if (user.AccountType === "Raffle Participant") {
+      // Fetch all raffles
+      const currentDate = new Date();
+      db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
+          if (err) {
+              throw err;
+          }
+        res.render('AccountPage', {
+          account: user,
+          raffles: allRaffles || [],
+          luckyNumbers: tickets,
+          errors: errors
         });
-        // Create a shallow copy of the raffle object and replace the tickets array with available tickets
-        return Object.assign({}, raffle, { tickets: availableTickets });
       });
-
-      // Render the AccountPage with the provided message, user, and filtered raffles
-      res.render('AccountPage', {
-        account: user,
-        raffles: rafflesWithAvailableTickets,
-        errors: errors
-      });
-    });
+    }
   });
 }
+
+
 
 
 
@@ -533,7 +504,7 @@ const calculateLuckyNumbers = async () => {
 };
 
 // Call the function to calculate lucky numbers periodically
-setInterval(calculateLuckyNumbers, 3000); // 5 sec (5000) for testing, 2 min (120000) for final
+setInterval(calculateLuckyNumbers, 120000); // 5 sec (5000) for testing, 2 min (120000) for final
 
 
     /* Send the verification code to the user's email
