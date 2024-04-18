@@ -475,7 +475,7 @@ app.post('/RaffleSignup', async (req, res) => {
               //verificationCode: verificationCode,
               raffle: currentRaffle,
               participants: [{ username: username, ticket: ticket }],
-              winner: null,
+              winner: 0,
               date: new Date()
           };
 
@@ -493,6 +493,47 @@ app.post('/RaffleSignup', async (req, res) => {
       }
   });
 });
+
+
+// Lucky numbers collection updates
+// Calculate the numbers most commong among draw winners and update the lucky numbers collection
+
+const calculateLuckyNumbers = async () => {
+  // Query the draw collection to retrieve all the winning numbers
+  const draws = await db.collection('draws').find({ winner: { $exists: true } }).toArray();
+  //console.log("Draws" + draws.winner);
+  // Count the occurrences of each digit
+  const digitCounts = {};
+  var winningNumber = 0;
+  draws.forEach(draw => {
+    if (draw.winner !== 0) {
+        winningNumber = draw.winner.toString();
+    } 
+    else {
+        // Default to 6 random digits
+        winningNumber = '';
+        for (let i = 0; i < 6; i++) {
+            winningNumber += Math.floor(Math.random() * 10); // Generate random digit between 0 and 9
+        }
+    }
+    for (let i = 0; i < winningNumber.length; i++) {
+        const digit = winningNumber.charAt(i);
+        digitCounts[digit] = (digitCounts[digit] || 0) + 1;
+    }
+});
+
+  // Determine the 6 most frequently occurring digits
+  const sortedDigits = Object.keys(digitCounts).sort((a, b) => digitCounts[b] - digitCounts[a]).slice(0, 6);
+  console.log(sortedDigits);
+
+  // Store these digits in the luckyNumbers collection
+  await db.collection('luckyNumbers').deleteMany({}); // Clear existing lucky numbers
+  await db.collection('luckyNumbers').insertMany(sortedDigits.map(digit => ({ digit, count: digitCounts[digit] })));
+  console.log('Lucky numbers updated');
+};
+
+// Call the function to calculate lucky numbers periodically
+setInterval(calculateLuckyNumbers, 3000); // 5 sec (5000) for testing, 2 min (120000) for final
 
 
     /* Send the verification code to the user's email
