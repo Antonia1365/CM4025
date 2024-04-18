@@ -173,8 +173,21 @@ font-weight: bold;
 }
 
 
+#ChooseTicket, #WriteTicket{
+    left: 3vw;
+  }
 
+#ChooseTicket{
+  top: 20vw;
+}
 
+#WriteTicket{
+    top: 30vw;
+  }
+
+.ContainerDetails{
+    font-size: 1.1rem;
+}
 
 
 /* Code for the custom scrollbar and arrow buttons was generated 

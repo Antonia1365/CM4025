@@ -65,6 +65,7 @@
             <button id="EnterRaffle_btn" class="submit" type="submit">Enter Raffle</button>
             <div id="EnterRaffle" class="ContainerDetails" style="display: none;">
                 <p id="ChooseTicketTitle"> Choose a ticket</p>
+                <div id="ChooseTicket" class="Hint"></div>
                 <form action="/enterRaffle" method="POST">
                     <select id="ticketDropdown" name="ticket" class="createForms" required>
                         <% if (luckyNumbers && luckyNumbers.length > 0) { %>
@@ -75,6 +76,10 @@
                             <option value="" disabled>No tickets available</option>
                         <% } %>
                     </select>
+ 
+                    <p id="ChooseTicketTitle"> Or create your own </p>
+                    <div id="WriteTicket" class="Hint"></div>
+                    <input id="ticketNumberInput" class="createForms" type="text" placeholder="Ticket Number:" name="TicketNumber" required pattern="[0-9]{6}" title="Enter 6 digits from 0 to 9"/>
                     <!-- Hidden input field for storing the user's email -->
                     <input type="hidden" name="userEmail" value="<%= account.email %>" />
                     <!-- Buttons for form submission -->
@@ -113,7 +118,7 @@
     
 
     <div id="LeftBox" class="mainBox">
-        <p id="Username"> <%= account.Username %> </p>
+        <p id="Username"> Account Details </Details> </p>
         <div id="AccountDetails" class="ContainerDetails">
             <p>Username: <%= account.Username %></p>
             <p>Email: <%= account.Email %></p>

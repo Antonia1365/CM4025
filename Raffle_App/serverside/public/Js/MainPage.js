@@ -67,5 +67,6 @@ $(document).ready(function(){
         $("#ParticipateGuest").css("display", "block");
     }
   });
+  
 }); 
 

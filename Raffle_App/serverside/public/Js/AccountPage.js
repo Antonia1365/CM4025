@@ -9,7 +9,8 @@ var raffleTaken = $("#RaffleTaken");
 var currentIndex = 0;
 var raffleBoxTitle = document.getElementById('RaffleBoxTitle');
 var raffleItems = document.querySelectorAll('.raffleItem');
-
+const ticketDropdown = document.getElementById('ticketDropdown');
+const ticketNumberInput = document.getElementById('ticketNumberInput');
 
 if (raffleTaken.css("visibility") === "visible") {
 setTimeout(function () {
@@ -17,7 +18,11 @@ raffleTaken.css("visibility", "hidden");
 }, 5000);
 }
 
-
+$("#ChooseTicket").css("visibility", "hidden");
+$("#WriteTicket").css("visibility", "hidden");
+ticketDropdown.disabled = false;
+ticketNumberInput.disabled = true;
+ticketNumberInput.style.borderColor = "#ffffffed";
 
 
 // Initially hide the CreateRaffle section
@@ -29,6 +34,8 @@ $("#MyRaffle").css("display", "none");
 $("#CreateRaffle_btn").css("display", "none");
 $("#PrevRaffleBtn").css("display", "none");
 $("#NextRaffleBtn").css("display", "none");
+
+//console.log("CreateRaffle");
 raffleBoxTitle.textContent = "Create a new Raffle";
 
 });
@@ -42,6 +49,7 @@ $("#PrevRaffleBtn").css("display", "inline-block");
 $("#NextRaffleBtn").css("display", "inline-block");
 
 raffleBoxTitle.textContent = "Raffles Held";
+//console.log("DisplayRaffles");
 
 });
 
@@ -55,7 +63,9 @@ $("#EnterRaffle_btn").css("display", "none");
 $("#PrevRaffleBtn").css("display", "none");
 $("#NextRaffleBtn").css("display", "none");
 $("#RaffleBoxTitle").text("Enter a Raffle");
-
+$("#ChooseTicket").css("visibility", "visible");
+$("#WriteTicket").css("visibility", "visible");
+//console.log("EnterRaffle");
 });
 
 
@@ -67,7 +77,9 @@ $("#EnterRaffle_btn").css("display", "block");
 $("#PrevRaffleBtn").css("display", "inline-block");
 $("#NextRaffleBtn").css("display", "inline-block");
 $("#RaffleBoxTitle").text("Enter a Raffle");
-//updateTicketDropdown();
+$("#ChooseTicket").css("visibility", "hidden");
+$("#WriteTicket").css("visibility", "hidden");
+
 });
 
 
@@ -96,6 +108,27 @@ document.getElementById('PrevRaffleBtn').addEventListener('click', function () {
 currentIndex = (currentIndex - 1 + raffleItems.length) % raffleItems.length;
 showRaffle(currentIndex);
 });
+
+
+    // Function to disable ticketNumberInput and enable ticketDropdown
+    function disableTicketNumberInput() {
+        console.log("Ticket dropdown clicked");
+        ticketNumberInput.disabled = true;
+        ticketNumberInput.style.borderColor = "#ffffffed";
+        ticketDropdown.disabled = false;
+    }
+
+    // Function to disable ticketDropdown and enable ticketNumberInput
+    function disableTicketDropdown() {
+        console.log("Ticket number input clicked");
+        ticketDropdown.disabled = true;
+        ticketNumberInput.disabled = false;
+        ticketNumberInput.style.borderColor = "#a8a4a4";
+    }
+
+    // Add event listeners to both elements
+    $('#ChooseTicket').click( disableTicketNumberInput);
+    $('#WriteTicket').click(disableTicketDropdown);
 
 
 // Function which displays the message box with explanation on when the account
