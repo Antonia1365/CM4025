@@ -57,8 +57,7 @@
 <div id="RaffleSignup" class="Forms">
     <p id="TitleParticipate" class="title"> Enter as a Guest </p>
     <form action= '/RaffleSignup' method='POST'>
-        <input class="createForms" type="text" placeholder="Alias:" name="Username" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}"
-               title="One number, uppercase and lowercase letters. At least 7 or more characters total" required>
+        <input class="createForms" type="text" placeholder="Ticket Number:" name="TicketNumber" required pattern="[0-9]{6}" title="Enter 6 digits from 0 to 9"/>
         <input class="createForms" type="email" placeholder="Email:" name="Email" required pattern="\S+"/>
         <!--- Hidden input to send the Raffle details along with the user details -->
         <input type="hidden" id="currentRaffleInput" name="CurrentRaffle" />

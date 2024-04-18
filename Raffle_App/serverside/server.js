@@ -324,19 +324,22 @@ app.post('/createRaffle', (req, res) => {
       }
 
       // Generate 10 unique verification codes for tickets
+      // Update, user writes their ticket
+          
+      /*
       const tickets = [];
       while (tickets.length < 10) {
           const newTicket = generateUniqueTicket(tickets);
           tickets.push(newTicket);
       }
-
+      */
       // Create a new raffle object
       const newRaffle = {
           name: name,
           prize: prize,
           drawDate: drawDate,
-          user: user,
-          tickets: tickets
+          user: user
+          //tickets: tickets
       };
 
       // Insert the new raffle into the database
@@ -420,12 +423,13 @@ app.post('/RaffleSignup', async (req, res) => {
 
   var username = req.body.Email; // Changed it to email
   var currentRaffle = JSON.parse(req.body.CurrentRaffle);
+  var ticket = req.body.TicketNumber;
 
-  console.log("tickets"); 
-  console.log(currentRaffle.tickets); 
+  console.log(ticket); 
+  //console.log(currentRaffle.tickets); 
 
   // Generate a verification code
-  var verificationCode = generateVerificationCode(); // Is it still needed?
+  //var verificationCode = generateVerificationCode(); // Is it still needed?
 
   // Check if there's an existing draw instance for the current raffle
   db.collection('draws').findOne({ 'raffle.name': currentRaffle.name }, (err, existingDraw) => {
@@ -447,35 +451,10 @@ app.post('/RaffleSignup', async (req, res) => {
               return;
           }
 
-          // Check if there are any available tickets (should never fall to this, but just in case)
-          if (!currentRaffle.tickets || currentRaffle.tickets.length === 0) {
-              console.log('No available tickets');
-              res.render("LoginPage", {
-                  errors: "No available tickets"
-              });
-              return;
-          }
-
-          // Get available tickets (not already taken by participants)
-          const availableTickets = currentRaffle.tickets.filter(ticket =>
-              !existingDraw.participants.some(participant => participant.ticket === ticket)
-          );
-
-          if (availableTickets.length === 0) {
-              console.log('No available tickets');
-              res.render("LoginPage", {
-                  errors: "No available tickets"
-              });
-              return;
-          }
-
-          // Randomly select a ticket from the available tickets
-          const selectedTicket = availableTickets[Math.floor(Math.random() * availableTickets.length)];
-
           // Add the new participant to the participants array with the chosen ticket
           db.collection('draws').updateOne(
               { _id: existingDraw._id },
-              { $addToSet: { participants: { username: username, ticket: selectedTicket } } },
+              { $addToSet: { participants: { username: username, ticket: ticket } } },
               (err, result) => {
                   if (err) {
                       console.error('Error updating draw:', err);
@@ -489,13 +468,13 @@ app.post('/RaffleSignup', async (req, res) => {
           );
       } else {
           // No existing draw for this raffle, create a new one
-          // Randomly select a ticket for the new participant
-          const selectedTicket = currentRaffle.tickets[Math.floor(Math.random() * currentRaffle.tickets.length)];
+          //Update: User chooses their own ticket
+         // const selectedTicket = currentRaffle.tickets[Math.floor(Math.random() * currentRaffle.tickets.length)];
           
           var newDraw = {
-              verificationCode: verificationCode,
+              //verificationCode: verificationCode,
               raffle: currentRaffle,
-              participants: [{ username: username, ticket: selectedTicket }],
+              participants: [{ username: username, ticket: ticket }],
               winner: null,
               date: new Date()
           };
