@@ -20,8 +20,9 @@ $(document).ready(function(){
       });
 
       // Show the raffle at the index
+      if(raffleItems.length > 0){
       raffleItems[index].style.display = 'block';
-
+      }
       // Store the current raffle
     currentRaffle = {
       name: raffleItems[index].querySelector('p:nth-of-type(1)').innerText.split(': ')[1],

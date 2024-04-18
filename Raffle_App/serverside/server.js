@@ -43,20 +43,56 @@ const { MAIL_USERNAME, MAIL_PASSWORD, MAIL_RECEPIENT, OAUTH_CLIENTID, OAUTH_CLIE
 //---------------------------------------------------------------------------//
 function renderMainPage(req, res, errors) {
   const currentDate = new Date();
-          db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
+
+  // Get all raffles whoose draw date is in the future
+  db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
+      if (err) {
+          throw err;
+      }
+
+      // Array to store filtered raffles
+      const filteredRaffles = [];
+
+      // Counter to keep track of how many raffles have been processed
+      let processedRafflesCount = 0;
+
+      // Function to check if a raffle's draw has a winner greater than 0
+      function checkDrawWinner(raffle) {
+          db.collection('draws').findOne({ "raffle.name": raffle.name }, (err, draw) => {
               if (err) {
                   throw err;
               }
-              // Check if raffles is not defined or is empty
-              if (!allRaffles || allRaffles.length === 0) {
-                  // Render the page template with an empty array for raffles
-                  res.render('MainPage', { raffles: [], errors: errors });
-              } else {
-                  // Render the page template with the retrieved raffles
-                  res.render('MainPage', {raffles: allRaffles, errors: errors });
+
+              if (!draw || draw.winner <= 0) {
+                  // Include the raffle in the filtered list if no draw or winner is <= 0
+                  filteredRaffles.push(raffle);
+              }
+
+              // Increment processed raffles count
+              processedRafflesCount++;
+
+              // Check if all raffles have been processed
+              if (processedRafflesCount === allRaffles.length) {
+                  // Render the page template with the filtered raffles
+                  res.render('MainPage', { raffles: filteredRaffles, errors: errors });
               }
           });
+      }
+
+      // Check if raffles is not defined or is empty
+      if (!allRaffles || allRaffles.length === 0) {
+          // Render the page template with an empty array for raffles
+          res.render('MainPage', { raffles: [], errors: errors });
+      } else {
+          // Iterate over each raffle
+          allRaffles.forEach(raffle => {
+              // Check if the raffle has a draw with a winner greater than 0
+              checkDrawWinner(raffle);
+          });
+      }
+  });
 }
+
 
 
 
@@ -187,7 +223,6 @@ app.get('/logout', function (req, res) {
   obj = "";
   res.redirect('/');
   console.log("Logged out");
-  console.log(req.session.loggedin);
 });
 
 
@@ -290,12 +325,12 @@ function renderAccountPage(res, user, errors) {
       throw luckyNumbersErr;
     }
     
-    // Function was taken from ChatGTP
+    
     allDigits = luckyNumbers.reduce((accumulator, currentValue) => {
       return accumulator.concat(currentValue.digit);
     }, []);
 
-    // Create 5 lucky tickets to choose
+    // Function to create 5 lucky tickets to choose was taken from genAI
     const tickets = Array.from({ length: 5 }, () => {
       // Choose 3 random lucky digits 
       const randomDigits = Array.from({ length: 3 }, () => allDigits[Math.floor(Math.random() * allDigits.length)]);
@@ -319,21 +354,54 @@ function renderAccountPage(res, user, errors) {
           errors: errors
         });
       });
-    } else if (user.AccountType === "Raffle Participant") {
-      // Fetch all raffles
-      const currentDate = new Date();
-      db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
+    } 
+    else if (user.AccountType === "Raffle Participant") {
+      // Get all raffles
+      db.collection('raffles').find({}).toArray((err, allRaffles) => {
           if (err) {
               throw err;
           }
-        res.render('AccountPage', {
-          account: user,
-          raffles: allRaffles || [],
-          luckyNumbers: tickets,
-          errors: errors
-        });
+          const filteredRaffles = [];
+  
+          // Counter 
+          let processedRafflesCount = 0;
+  
+          // Function to check if a raffle's draw has a winner greater than 0
+          // checkDrawWinner was made with help from genAI
+          function checkDrawWinner(raffle) {
+              db.collection('draws').findOne({ "raffle.name": raffle.name }, (err, draw) => {
+                  if (err) {
+                      throw err;
+                  }
+  
+                  if (!draw || draw.winner <= 0) {
+                      // Include the raffle in the filtered list if no draw or winner is <= 0
+                      filteredRaffles.push(raffle);
+                  }
+  
+                  // Increment processed raffles
+                  processedRafflesCount++;
+  
+                  // Check if all raffles have been processed
+                  if (processedRafflesCount === allRaffles.length) {
+                      // Render the page template with the filtered raffles
+                      res.render('AccountPage', {
+                          account: user,
+                          raffles: filteredRaffles || [],
+                          luckyNumbers: tickets,
+                          errors: errors
+                      });
+                  }
+              });
+          }
+  
+          // Iterate over each raffle
+          allRaffles.forEach(raffle => {
+              // Check if the raffle's draw has a winner > 0
+              checkDrawWinner(raffle);
+          });
       });
-    }
+  }
   });
 }
 
@@ -628,7 +696,7 @@ function scheduleWinnerSelection(intervalInMinutes) {
   //notifyWinner();
 }
 
-scheduleWinnerSelection(0.1)
+scheduleWinnerSelection(60)
 // Start the winner selection process
 
 function notifyWinner(winner, winnerTicket) { 

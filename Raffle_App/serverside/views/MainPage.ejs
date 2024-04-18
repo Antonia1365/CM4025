@@ -45,7 +45,7 @@
                     <div class="raffleItem"">
                         <p>Raffle: <%= raffle.name %></p>
                         <p>Prize: <%= raffle.prize %>£</p>
-                        <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>         
+                        <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>
                     </div>
                 <% }); %>
             <% } else { %>
@@ -78,7 +78,9 @@
 <div id="ParticipationButtons">
     <button id="ParticipateGuest" class="submit">Participate in<br>raffle</button>
     <br>
-    <button id="AccountLink" class="submit">Log In/Sign Up</button>
+    <a href="/LoginPage">
+        <button id="AccountLink" class="submit">Log In/Sign Up</button>
+    </a>
 </div>
 
 

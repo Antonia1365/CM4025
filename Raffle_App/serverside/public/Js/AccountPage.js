@@ -21,10 +21,11 @@ raffleTaken.css("visibility", "hidden");
 
 $("#ChooseTicket").css("visibility", "hidden");
 $("#WriteTicket").css("visibility", "hidden");
+if(ticketDropdown != null){
 ticketDropdown.disabled = false;
 ticketNumberInput.disabled = true;
 ticketNumberInput.style.borderColor = "#ffffffed";
-
+}
 
 // Initially hide the CreateRaffle section
 // When the button is clicked
