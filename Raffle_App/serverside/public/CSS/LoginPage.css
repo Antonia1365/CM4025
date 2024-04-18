@@ -273,7 +273,7 @@ color:rgba(231, 9, 9, 0.685);
 
 .taken{
   color:rgba(212, 16, 16, 0.87);
-  margin-left: -3.5vw;
+
   }
   #UsernameTaken{
     margin-left: 4vw;
@@ -313,6 +313,7 @@ visibility: hidden;
 }
 li{
   list-style-type: none;
+  
 }
 /*-------------------------------------------------------------------------------------------*/
 #PassHint{

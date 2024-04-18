@@ -38,7 +38,7 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, fu
 })
 
 //---------------------------------------------------------------------------//
-function renderMainPage(req, res) {
+function renderMainPage(req, res, errors) {
   const currentDate = new Date();
           db.collection('raffles').find({ "drawDate": { $gt: currentDate } }).toArray((err, allRaffles) => {
               if (err) {
@@ -46,11 +46,11 @@ function renderMainPage(req, res) {
               }
               // Check if raffles is not defined or is empty
               if (!allRaffles || allRaffles.length === 0) {
-                  // Render the AccountPage template with an empty array for raffles
-                  res.render('MainPage', { raffles: [] });
+                  // Render the page template with an empty array for raffles
+                  res.render('MainPage', { raffles: [], errors: errors });
               } else {
-                  // Render the AccountPage template with the retrieved raffles
-                  res.render('MainPage', {raffles: allRaffles });
+                  // Render the page template with the retrieved raffles
+                  res.render('MainPage', {raffles: allRaffles, errors: errors });
               }
           });
 }
@@ -118,6 +118,7 @@ app.post('/signup', (req, res) => {
   });
 });
 
+
 var obj = "";  //will store the currently logged in user
 app.post('/dologin', function (req, res) {
   var Username = req.body.Username;
@@ -180,8 +181,10 @@ app.get("/AccountPage", (req, res) => {
 app.get('/logout', function (req, res) {
   req.session.loggedin = false;
   req.session.destroy();
+  obj = "";
   res.redirect('/');
   console.log("Logged out");
+  console.log(req.session.loggedin);
 });
 
 
@@ -215,7 +218,7 @@ app.post('/createRaffle', (req, res) => {
   // Check if drawDate is in the past
   if (drawDate < new Date()) {
       // Render the AccountPage with the error message and the current user
-      renderAccountPage(res, obj, 'Failed');
+      renderAccountPage(res, obj, 'Draw date cannot be in the past');
       return;
   }
 
@@ -224,14 +227,14 @@ app.post('/createRaffle', (req, res) => {
       if (err) {
           console.error('Error checking existing raffle:', err);
           // Render the AccountPage with the error message and the current user
-          renderAccountPage(res, obj, 'Failed');
+          renderAccountPage(res, obj, 'Failed to create raffle');
           return;
       }
 
       if (existingRaffle) {
           // A raffle with the same name already exists
           // Render the AccountPage with the error message and the current user
-          renderAccountPage(res, obj, 'Exists');
+          renderAccountPage(res, obj, 'A raffle with this name already exists');
           return;
       }
 
@@ -259,14 +262,14 @@ app.post('/createRaffle', (req, res) => {
           if (err) {
               console.error('Error creating raffle:', err);
               // Render the AccountPage with the error message and the current user
-              renderAccountPage(res, obj, 'Failed');
+              renderAccountPage(res, obj, 'Failed to create raffle');
               return;
           }
 
           console.log('Raffle created successfully');
           console.log(newRaffle);
           // Redirect to the AccountPage after successful creation
-          renderAccountPage(res, obj, 'Success');
+          renderAccountPage(res, obj, 'Raffle created successfully');
       });
   });
 });
@@ -335,24 +338,23 @@ function renderAccountPage(res, user, errors) {
 
 //---------------------------------------------------------------------//
 
-function EnterRaffle(username, currentRaffle, ticket, req, res) {
+function EnterRaffle(username, currentRaffle, ticket, req, res, callback) {
+  var errors = "";
   // Check if there's an existing draw instance for the current raffle
   db.collection('draws').findOne({ 'raffle.name': currentRaffle.name }, (err, existingDraw) => {
     if (err) {
         console.error('Error checking existing draw:', err);
         renderMainPage(req, res);
+        callback("System error: Cannot find data for this draw");
         return;
     }
 
     if (existingDraw) {
         // If there is, then check if the user is already among the participants
-        
         if (existingDraw.participants.some(participant => participant.username === username)) {
             // Username already exists in the participants array, display error message
             console.log('Username already exists in participants array');
-            res.render("LoginPage", { //Will need to render Main page
-                errors: "Username already exists in participants array"
-            });
+            callback("You have already entered this draw");  
             return;
         }
 
@@ -363,12 +365,13 @@ function EnterRaffle(username, currentRaffle, ticket, req, res) {
             (err, result) => {
                 if (err) {
                     console.error('Error updating draw:', err);
-                    renderMainPage(req, res);
+                    callback("You have already entered this draw");                
                     return;
                 }
                 console.log('Participant added to existing draw successfully');
-                renderMainPage(req, res);
-                console.log("Verification code sent. Please check your email.")
+                //console.log(req.session.loggedin.);
+                callback("You have successfully entered the raffle draw!"); 
+                return;                             
             }
         );
     } else {
@@ -387,16 +390,18 @@ function EnterRaffle(username, currentRaffle, ticket, req, res) {
         db.collection('draws').insertOne(newDraw, (err, result) => {
             if (err) {
                 console.error('Error storing draw: ', err);
-                renderMainPage(req, res);
+                callback( "Error: Could not enter the draw");                
                 return;
             }
 
             console.log('New draw stored successfully');
-            renderMainPage(req, res);
-            console.log("Verification code sent. Please check your email.")
+            callback("You have successfully entered the raffle draw!");
+            return;
+            //console.log("Verification code sent. Please check your email.")
         });
-    }
-});
+      }
+  });
+  
 }
 
 
@@ -405,13 +410,14 @@ app.post('/RaffleSignup', async (req, res) => {
   var username = req.body.Email; // Changed it to email
   var currentRaffle = JSON.parse(req.body.CurrentRaffle);
   var ticket = req.body.TicketNumber;
-
-  console.log(ticket); 
+  
+  //console.log(ticket); 
   //console.log(currentRaffle.tickets); 
 
-  // Generate a verification code
-  //var verificationCode = generateVerificationCode(); // Is it still needed?
-  EnterRaffle(username, currentRaffle, ticket, req, res);
+  EnterRaffle(username, currentRaffle, ticket, req, res, (errors) => {
+    console.log("Errors: " + errors);
+    renderMainPage(req, res, errors);
+  });
   
 });
 
@@ -421,12 +427,13 @@ app.post('/enterRaffle', (req, res) => {
   const username = req.session.currentuser; // Keep Username to differentiate account holders
   const currentRaffle = JSON.parse(req.body.CurrentRaffle);
   const ticket = req.body.activeInputValue;
-  console.log("Username: " + username);
-  console.log("Ticket: " + ticket);
-  console.log("Raffle Name: " + currentRaffle.name);
+  //console.log("User: " + username);
+ 
 
-  EnterRaffle(username, currentRaffle, ticket, req, res);
-
+  EnterRaffle(username, currentRaffle, ticket, req, res, (errors) => {
+    console.log("Errors: " + errors);
+    renderAccountPage(res, obj, errors);
+  });
 
 });
 

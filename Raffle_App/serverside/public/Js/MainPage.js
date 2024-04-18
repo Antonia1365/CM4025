@@ -1,8 +1,15 @@
 $(document).ready(function(){
 
   var raffleItems = document.querySelectorAll('.raffleItem');
+  var raffleTaken = $("#RaffleTaken");
   var currentIndex = 0;
   var currentRaffle = null; // Store the currently displayed raffle i.e chosen by user
+
+  if (raffleTaken.css("visibility") === "visible") {
+    setTimeout(function () {
+    raffleTaken.css("visibility", "hidden");
+    }, 5000);
+  }
 
   function showRaffle(index) {
       // Hide all raffles

@@ -29,6 +29,14 @@
     justify-content: center; 
     align-items: center;" >
         <p id="TitleMain" class="title"> Active Raffles Held </p>
+        <!-- Define hidden message divs -->
+ <% if (locals.errors) { %>
+    <div id="RaffleTaken" class="HintBox" style="visibility: visible;">
+        <ul class="taken"> 
+            <li class="HintList"><%= errors %></li>
+        </ul>
+    </div>
+ <% } %>
         <div id="CarouselContainer">
         <div id = "MyRaffle" class="ContainerDetails">
             <% if (raffles.length > 0) { %>
@@ -72,6 +80,9 @@
     <br>
     <button id="AccountLink" class="submit">Log In/Sign Up</button>
 </div>
+
+
+ 
 
 </div>
 

@@ -98,15 +98,8 @@
         <!-- Define hidden message divs -->
         <% if (locals.errors) { %>
             <div id="RaffleTaken" class="HintBox" style="visibility: visible;">
-            <ul class="taken">
-                <% if (errors === "Failed") { %>
-                    <li  class="HintList">Error!</li>
-                <% } %>  
-                    <% if (errors === "Success") { %>
-                      <li  class="HintList">Raffle successfully<br>created.</li>
-                    <% }  else { %>
-                      <li  class="HintList">Failed to create raffle.</li>
-                    <% } %>
+                <ul class="taken"> 
+                    <li class="HintList"><%= errors %></li>
                 </ul>
             </div>
          <% } %>
