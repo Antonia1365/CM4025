@@ -583,14 +583,31 @@ async function selectWinnerForClosestDraw() {
       
       //console.log("Participants: "+ closestDraw.participants.toArray());
 
+      // Send email to non-registered users
       if (winnerParticipant.username) {
         const emailRegex = /\S+@\S+\.\S+/;
         if (emailRegex.test(winnerParticipant.username)) {
           console.log('Winner participant is an email:', winnerParticipant.username);
+          notifyWinner(winnerParticipant.username, winnerTicket);
         } 
+
+         // Send email to registered users
         else {
           console.log('Winner participant is not an email:', winnerParticipant.username);
+          // Query the profile collection to find the account with the username
+          const profile = await db.collection('profile').findOne({ Username: winnerParticipant.username });
+                
+          if (profile) {
+              console.log('Email found:', profile.Email, winnerTicket);
+              notifyWinner(profile.Email, winnerTicket);
+              
+          } 
+          else {
+              console.log('No profile found for the winner participant.');
+          }
         }
+
+      // Error should it fall here
       } 
       else {
         console.log('No winner participant username found.');
@@ -614,8 +631,7 @@ function scheduleWinnerSelection(intervalInMinutes) {
 scheduleWinnerSelection(0.1)
 // Start the winner selection process
 
-function notifyWinner(winner) { 
-  MAIL_RECEPIENT = winner.email;
+function notifyWinner(winner, winnerTicket) { 
   // Create a Nodemailer transporter and send email notif to winner
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -631,9 +647,12 @@ function notifyWinner(winner) {
 
   let mailOptions = {
     from: MAIL_USERNAME,
-    to: MAIL_RECEPIENT,
+    to: winner,
     subject: 'Recent Raffle Draw Results',
-    text: 'Hi from your nodemailer project'
+    text: 'Congratulations! Your ticket number '+ winnerTicket 
+     + ' has been drawn as the winner of our most recent raffle draw.'
+     + ' Enter your ticket number along with your email or log in to claim your prize:'
+     + ' http://localhost:8080/LoginPage'
   };
 
 
