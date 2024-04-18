@@ -37,6 +37,9 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, fu
   console.log('listening on 8080')
 })
 
+const nodemailer = require('nodemailer');
+const { MAIL_USERNAME, MAIL_PASSWORD, MAIL_RECEPIENT, OAUTH_CLIENTID, OAUTH_CLIENT_SECRET, OAUTH_REFRESH_TOKEN} = require('./emailConfig');
+
 //---------------------------------------------------------------------------//
 function renderMainPage(req, res, errors) {
   const currentDate = new Date();
@@ -481,31 +484,65 @@ setInterval(calculateLuckyNumbers, 120000); // 5 sec (5000) for testing, 2 min (
 
 /*-----------------------------------------------------------------------*/
 // Function to select a winner for a draw
+var winnerTicket = 0;
 function selectWinner(draw) {
-  // Check if the draw has no winner and has participants
-  if (draw.winner === 0 && draw.participants.length > 0) {
+  return new Promise((resolve, reject) => {
+    // Check if the draw has no winner and has participants
+    if (draw.winner === 0 && draw.participants.length > 0) {
       // Randomly select a participant's ticket
       const winningTicket = parseInt(draw.participants[Math.floor(Math.random() * draw.participants.length)].ticket);
       // Update the draw with the winning ticket
+      winnerTicket = winningTicket;
+
       db.collection('draws').updateOne(
-          { _id: draw._id },
-          { $set: { winner: winningTicket } },
-          (err, result) => {
-              if (err) {
-                  console.error('Error updating draw with winner:', err);
-                  return;
-              }
-              console.log("Winner " + winningTicket + " selected and updated successfully: " + draw.raffle.name );
+        { _id: draw._id },
+        { $set: { winner: winningTicket } },
+        (err, result) => {
+          if (err) {
+            console.log('Error updating draw with winner:', err);
+            return reject(err);
           }
+          console.log("Winner " + winningTicket + " selected and updated successfully: " + draw.raffle.name);
+          
+          // Query participants whose ticket doesn't equal the winning ticket
+          db.collection('draws').findOne({ _id: draw._id }, (err, updatedDraw) => {
+            if (err) {
+              console.log('Error finding draw:', err);
+              return reject(err);
+            }
+            // Update the draw with the winner
+            if (updatedDraw && updatedDraw.participants) {
+              const winnerParticipant = updatedDraw.participants.filter(participant => participant.ticket == winningTicket.toString());
+
+              console.log('Winner:', winnerParticipant);
+              // Remove the loser participants
+              db.collection('draws').updateOne(
+                { _id: draw._id },
+                { $set: { participants: winnerParticipant } },
+                (err, result) => {
+                  if (err) {
+                    console.log('Error removing losing participants:', err);
+                    return reject(err);
+                  }
+                  console.log('Losing participants removed from the draw.');
+                  resolve();
+                }
+              );
+            }
+          });
+        }
       );
-  } else {
+    } else {
       console.log('Draw already has a winner or no participants.');
-  }
+      resolve();
+    }
+  });
 }
+
 
 // Choose a random winner for a draw 
 // For testing purposes choose the draw with closest date to the current date every n min
-function selectWinnerForClosestDraw() {
+async function selectWinnerForClosestDraw() {
   // Get the current date
   const currentDate = new Date();
 
@@ -514,76 +551,91 @@ function selectWinnerForClosestDraw() {
   let closestDraw;
   let closestDifference = Infinity; //max
 
-  // Take draws from the database that don't yet have a winner
-  db.collection('draws').find({winner: 0 }).toArray((err, draws) => {
-      if (err) {
-          console.error('Error fetching draws:', err);
-          return;
+  try {
+    // Take draws from the database that don't yet have a winner
+    const draws = await db.collection('draws').find({ winner: 0 }).toArray();
+
+    // Loop through all draws
+    for (const draw of draws) {
+      const drawDate = new Date(draw.raffle.drawDate);
+
+      // Filter only future draws
+      if (drawDate > currentDate) {
+        // Difference between the draw date and the current date
+        const difference = drawDate - currentDate;
+
+        if (difference < closestDifference) {
+          closestDraw = draw;
+          closestDifference = difference; // Update to the smallest current number
+        }
       }
-      //console.log(draws);
+    }
 
-      // Loop through all draws
-      draws.forEach(draw => {
-          const drawDate = new Date(draw.raffle.drawDate);
-          //console.log("Drawdate: " + drawDate);
+    // Check if a closest draw was found
+    if (closestDraw) {
+      // Select a winner
+      await selectWinner(closestDraw);
 
-          // Filter only future draws
-          if (drawDate > currentDate) {
-              // Difference between the draw date and the current date
-              const difference = drawDate - currentDate;
+      // After selecting the winner, perform the query
+      const result = await db.collection('draws').findOne({ _id: closestDraw._id });
+      console.log("Ticket: "+ winnerTicket);
+      const winnerParticipant = result.participants.find(participant => participant.ticket === winnerTicket.toString());
+      
+      //console.log("Participants: "+ closestDraw.participants.toArray());
 
-              if (difference < closestDifference) {
-                  closestDraw = draw;
-                  closestDifference = difference; // Update to the smallest current number
-              }
-          }
-      });
-
-      // Check if a closest draw was found
-      if (closestDraw) {
-          // Select a winner
-          selectWinner(closestDraw);
-      } else {
-          console.log('No draws found with draw date in the future.');
+      if (winnerParticipant.username) {
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (emailRegex.test(winnerParticipant.username)) {
+          console.log('Winner participant is an email:', winnerParticipant.username);
+        } 
+        else {
+          console.log('Winner participant is not an email:', winnerParticipant.username);
+        }
+      } 
+      else {
+        console.log('No winner participant username found.');
       }
-  });
+    } else {
+      console.log('No draws found with draw date in the future.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
+
 
 // Function to periodically select a winner for the draw with the closest draw date
 function scheduleWinnerSelection(intervalInMinutes) {
   // Set up an interval to run every x minutes
   setInterval(selectWinnerForClosestDraw, intervalInMinutes * 60 * 1000); // Convert minutes to milliseconds
+  //notifyWinner();
 }
 
-// Call the scheduleWinnerSelection function to start the winner selection process
-//scheduleWinnerSelection(0.5); // Call every 60 minutes (change as needed)
+scheduleWinnerSelection(0.1)
+// Start the winner selection process
 
-const nodemailer = require('nodemailer');
-MAIL_USERNAME = "sally.mn1245@gmail.com";
-MAIL_PASSWORD = "SailingSally45"
-OAUTH_CLIENTID = "457446171786-d55acq0r4uojssbem6fkrahm92fmd53o.apps.googleusercontent.com";
-OAUTH_CLIENT_SECRET = "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";
-OAUTH_REFRESH_TOKEN = "1//04vjonRICrQ_3CgYIARAAGAQSNwF-L9Iriv4i_TuGSaFfGqYZUBBOGFNm0PG2x5QF1qEgo1D-WjXUyV9fx_gHaAJMhHufnQZvW2I";
-// Create a Nodemailer transporter
-let transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: MAIL_USERNAME,
-    pass: MAIL_PASSWORD,
-    clientId: OAUTH_CLIENTID,
-    clientSecret: OAUTH_CLIENT_SECRET,
-    refreshToken: OAUTH_REFRESH_TOKEN
-  }
-});
+function notifyWinner(winner) { 
+  MAIL_RECEPIENT = winner.email;
+  // Create a Nodemailer transporter and send email notif to winner
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: MAIL_USERNAME,
+      pass: MAIL_PASSWORD,
+      clientId: OAUTH_CLIENTID,
+      clientSecret: OAUTH_CLIENT_SECRET,
+      refreshToken: OAUTH_REFRESH_TOKEN
+    }
+  });
 
+  let mailOptions = {
+    from: MAIL_USERNAME,
+    to: MAIL_RECEPIENT,
+    subject: 'Recent Raffle Draw Results',
+    text: 'Hi from your nodemailer project'
+  };
 
-let mailOptions = {
-  from: 'sally.mn1245@gmail.com',
-  to: 'a.zhekova@rgu.ac.uk',
-  subject: 'Nodemailer Project',
-  text: 'Hi from your nodemailer project'
-};
 
   transporter.sendMail(mailOptions, function(err, data) {
     if (err) {
@@ -592,6 +644,11 @@ let mailOptions = {
       console.log("Email sent successfully");
     }
   });
+
+}
+
+
+
 
 
 
