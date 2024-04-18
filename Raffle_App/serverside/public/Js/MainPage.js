@@ -2,6 +2,8 @@ $(document).ready(function(){
 
   var raffleItems = document.querySelectorAll('.raffleItem');
   var raffleTaken = $("#RaffleTaken");
+  var raffleSignupDiv = document.getElementById("Create");
+  var raffleListDiv = document.getElementById("RightBox");
   var currentIndex = 0;
   var currentRaffle = null; // Store the currently displayed raffle i.e chosen by user
 
@@ -46,9 +48,7 @@ $(document).ready(function(){
   });
 
 
-  var raffleSignupDiv = document.getElementById("Create");
-  var raffleListDiv = document.getElementById("RightBox");
-
+  
   $('#ParticipateGuest').click(function() {
     
     if (raffleSignupDiv.style.display === "none") {
@@ -74,6 +74,15 @@ $(document).ready(function(){
         $("#ParticipateGuest").css("display", "block");
     }
   });
+
+
+  $('#EnterGuestRaffle').click(function () {
+
+
+  });
+
+
+
   
 }); 
 

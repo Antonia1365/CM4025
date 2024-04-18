@@ -380,7 +380,6 @@ function EnterRaffle(username, currentRaffle, ticket, req, res, callback) {
        // const selectedTicket = currentRaffle.tickets[Math.floor(Math.random() * currentRaffle.tickets.length)];
         
         var newDraw = {
-            //verificationCode: verificationCode,
             raffle: currentRaffle,
             participants: [{ username: username, ticket: ticket }],
             winner: 0,
@@ -480,14 +479,119 @@ const calculateLuckyNumbers = async () => {
 setInterval(calculateLuckyNumbers, 120000); // 5 sec (5000) for testing, 2 min (120000) for final
 
 
-    /* Send the verification code to the user's email
-  try {
-    await sendVerificationCode(email, verificationCode);
-  } catch (error) {
-    console.error('Error sending verification code:', error);
-    res.render("LoginPage", {
-      errors: "Failed to send verification code"
-    });
-    return;
+/*-----------------------------------------------------------------------*/
+// Function to select a winner for a draw
+function selectWinner(draw) {
+  // Check if the draw has no winner and has participants
+  if (draw.winner === 0 && draw.participants.length > 0) {
+      // Randomly select a participant's ticket
+      const winningTicket = parseInt(draw.participants[Math.floor(Math.random() * draw.participants.length)].ticket);
+      // Update the draw with the winning ticket
+      db.collection('draws').updateOne(
+          { _id: draw._id },
+          { $set: { winner: winningTicket } },
+          (err, result) => {
+              if (err) {
+                  console.error('Error updating draw with winner:', err);
+                  return;
+              }
+              console.log("Winner " + winningTicket + " selected and updated successfully: " + draw.raffle.name );
+          }
+      );
+  } else {
+      console.log('Draw already has a winner or no participants.');
   }
-*/
+}
+
+// Choose a random winner for a draw 
+// For testing purposes choose the draw with closest date to the current date every n min
+function selectWinnerForClosestDraw() {
+  // Get the current date
+  const currentDate = new Date();
+
+  // Look at draws with dates > current
+  // Find the min difference
+  let closestDraw;
+  let closestDifference = Infinity; //max
+
+  // Take draws from the database that don't yet have a winner
+  db.collection('draws').find({winner: 0 }).toArray((err, draws) => {
+      if (err) {
+          console.error('Error fetching draws:', err);
+          return;
+      }
+      //console.log(draws);
+
+      // Loop through all draws
+      draws.forEach(draw => {
+          const drawDate = new Date(draw.raffle.drawDate);
+          //console.log("Drawdate: " + drawDate);
+
+          // Filter only future draws
+          if (drawDate > currentDate) {
+              // Difference between the draw date and the current date
+              const difference = drawDate - currentDate;
+
+              if (difference < closestDifference) {
+                  closestDraw = draw;
+                  closestDifference = difference; // Update to the smallest current number
+              }
+          }
+      });
+
+      // Check if a closest draw was found
+      if (closestDraw) {
+          // Select a winner
+          selectWinner(closestDraw);
+      } else {
+          console.log('No draws found with draw date in the future.');
+      }
+  });
+}
+
+// Function to periodically select a winner for the draw with the closest draw date
+function scheduleWinnerSelection(intervalInMinutes) {
+  // Set up an interval to run every x minutes
+  setInterval(selectWinnerForClosestDraw, intervalInMinutes * 60 * 1000); // Convert minutes to milliseconds
+}
+
+// Call the scheduleWinnerSelection function to start the winner selection process
+//scheduleWinnerSelection(0.5); // Call every 60 minutes (change as needed)
+
+const nodemailer = require('nodemailer');
+MAIL_USERNAME = "sally.mn1245@gmail.com";
+MAIL_PASSWORD = "SailingSally45"
+OAUTH_CLIENTID = "457446171786-d55acq0r4uojssbem6fkrahm92fmd53o.apps.googleusercontent.com";
+OAUTH_CLIENT_SECRET = "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";
+OAUTH_REFRESH_TOKEN = "1//04vjonRICrQ_3CgYIARAAGAQSNwF-L9Iriv4i_TuGSaFfGqYZUBBOGFNm0PG2x5QF1qEgo1D-WjXUyV9fx_gHaAJMhHufnQZvW2I";
+// Create a Nodemailer transporter
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    type: 'OAuth2',
+    user: MAIL_USERNAME,
+    pass: MAIL_PASSWORD,
+    clientId: OAUTH_CLIENTID,
+    clientSecret: OAUTH_CLIENT_SECRET,
+    refreshToken: OAUTH_REFRESH_TOKEN
+  }
+});
+
+
+let mailOptions = {
+  from: 'sally.mn1245@gmail.com',
+  to: 'a.zhekova@rgu.ac.uk',
+  subject: 'Nodemailer Project',
+  text: 'Hi from your nodemailer project'
+};
+
+  transporter.sendMail(mailOptions, function(err, data) {
+    if (err) {
+      console.log("Error " + err);
+    } else {
+      console.log("Email sent successfully");
+    }
+  });
+
+
+
