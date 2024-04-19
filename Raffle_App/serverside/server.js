@@ -442,8 +442,8 @@ function renderAccountPage(res, user, errors) {
                   // Check if all raffles have been processed
                   if (processedRafflesCount === allRaffles.length) {
                       // Render the page template with the filtered raffles
-                      console.log("Length: ", filteredDraws.length);
-                      console.log("Draw: ", filteredDraws);
+                      //console.log("Length: ", filteredDraws.length);
+                      //console.log("Draw: ", filteredDraws);
                       res.render('AccountPage', {
                           account: user,
                           raffles: filteredRaffles || [],
@@ -566,6 +566,35 @@ app.post('/enterRaffle', (req, res) => {
   });
 
 });
+
+
+
+// Exit a raffle (only for registered users)
+app.post('/exitDraw', (req, res) => {
+  const username = req.session.currentuser; // Keep Username to differentiate account holders
+  const currentDraw = JSON.parse(req.body.CurrentDraw);
+  //console.log("Draw: " + currentDraw.name + " END DRAW");
+  console.log("User: "+username);
+ 
+ db.collection('draws').updateOne(
+  { "raffle.name": currentDraw.name }, // Draw is identified by the raffle name
+  { $pull: { participants: { username: username } } },
+  (err, result) => {
+      if (err) {
+          console.log('Error removing participant from draw:', err);
+          renderAccountPage(res, obj, 'Error removing participant from draw:');
+
+      } else if (result.modifiedCount === 0) {
+          console.log('Draw not found');
+          renderAccountPage(res, obj, 'Draw not found');
+      } else {
+          console.log('Participant removed from draw ' + currentDraw.name);
+          renderAccountPage(res, obj, 'You were removed from the draw');
+      }
+  }
+);
+});
+
 
 
 

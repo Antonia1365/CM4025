@@ -8,6 +8,7 @@ var messageInfo = document.getElementById("MessageInfo");
 var raffleTaken = $("#RaffleTaken");
 var currentIndex = 0;
 var currentRaffle = null; // Store the currently displayed raffle i.e chosen by user
+var currentDraw = null; 
 var raffleBoxTitle = document.getElementById('RaffleBoxTitle');
 var raffleItems = document.querySelectorAll('.raffleItem');
 var drawItems = document.querySelectorAll('.drawItem');
@@ -156,31 +157,40 @@ function showDraw(index) {
 myDrawsButton.addEventListener('click', function () {
     var accountDetails = document.getElementById('AccountDetails');
     var carouselContainer = document.getElementById('CarouselContainer2');
+    var exitDrawBtn = document.getElementById('ExitDraw');
 
     // Toggle visibility of the account details and carousel containers
     accountDetails.style.display = (accountDetails.style.display === 'none') ? 'block' : 'none';
     carouselContainer.style.display = (carouselContainer.style.display === 'none') ? 'block' : 'none';
 
     if (myDrawsButton.innerText === 'My Draws') {
+        exitDrawBtn.style.display = 'flex';
         myDrawsButton.innerText = 'Back';
     } else {
         myDrawsButton.innerText = 'My Draws';
+        exitDrawBtn.style.display = 'none';
     }
 
     // If carousel is made visible, show draws
     if (carouselContainer.style.display === 'block') {
+        exitDrawBtn.style.display = 'block';
         showDraw(currentIndex);
+        $('#currentDraw').val(JSON.stringify(currentDraw));
+        //console.log("Showing draw: ", currentDraw);
     }
 });
 
 document.getElementById('NextDrawBtn').addEventListener('click', function () {
     currentIndex = (currentIndex + 1) % drawItems.length;
     showDraw(currentIndex);
+    $('#currentDraw').val(JSON.stringify(currentDraw));
+    //console.log("Showing draw: ", currentDraw);
 });
 
 document.getElementById('PrevDrawBtn').addEventListener('click', function () {
     currentIndex = (currentIndex - 1 + drawItems.length) % drawItems.length;
     showDraw(currentIndex);
+    $('#currentDraw').val(JSON.stringify(currentDraw));
 });
 
 

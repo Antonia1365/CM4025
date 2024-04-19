@@ -158,14 +158,20 @@
                 <button id="PrevDrawBtn"></button>
             </div>
         </div>
+        <div class="DrawButtons" style= "display: flex; flex-direction: row; justify-content: center; align-items: center;">
+        <button id="MyDraws" class="Leave" type="button">My Draws</button>
 
-        <button id="MyDraws" class="submit" type="button">My Draws</button>
+        <form action="/exitDraw" method="post">
+            <input type="hidden" id="currentDraw" name="CurrentDraw" value="" />
+            <button id="ExitDraw" class="Leave" type="submit" style="display: none;">Exit Draw</button>
+        </form>
+    </div>
 <!--------------------------- Buttons for account deletion/ recovery ----------------->
 <div id="EraseAccount">
     <form action="/logout">
-        <button id="LogOut" class="Leave" type="submit">Log out</button>
+        <button id="LogOut" class="submit" type="submit">Log out</button>
     </form>
-    <button id="Deactivate" class="Leave" type="submit">Delete Account</button> 
+    <button id="Deactivate" class="submit" type="submit">Delete Account</button> 
 </div>
     </div>
 <!----------------------- Message to appear before deleting/ recovering ----------------------------------->
