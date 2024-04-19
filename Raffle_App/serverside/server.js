@@ -230,7 +230,7 @@ function selectWinner(draw) {
             if (updatedDraw && updatedDraw.participants) {
               const winnerParticipant = updatedDraw.participants.filter(participant => participant.ticket == winningTicket.toString());
 
-              console.log('Winner:', winnerParticipant);
+              console.log('Winner participant:', winnerParticipant[0].username);
               // Remove the loser participants
               db.collection('draws').updateOne(
                 { _id: draw._id },
@@ -244,6 +244,38 @@ function selectWinner(draw) {
                   resolve();
                 }
               );
+
+              // Send email to non-registered users
+      if (winnerParticipant[0].username.length > 0) {  
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (emailRegex.test(winnerParticipant.username)) {
+          console.log('Winner participant is an email:', winnerParticipant[0].username);
+          notifyWinner(winnerParticipant[0].username, winnerTicket);
+        } 
+
+         // Send email to registered users
+        else {
+          db.collection('profile').findOne({ Username: winnerParticipant[0].username })
+            .then(profile => {
+              console.log('Profile found:', profile);
+              if (profile) {
+                  console.log('Email found:', profile.Email, winnerTicket);
+                  notifyWinner(profile.Email, winnerTicket);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              // Handle the error
+              return;
+            });
+        }
+
+      // Error should it fall here
+      } 
+      else {
+        console.log('No winner participant username found.');
+      }
+              
             }
           });
         }
@@ -478,8 +510,10 @@ app.post('/triggerDraw', (req, res) => {
           console.error('Error triggering draw:', error);
           // Render the account page or send a response with the error message
           renderAccountPage(res, obj, 'Error triggering draw: ' + error);
+          return;
         });
     }
+    console.log('Selecting winner...' + draw.participants.length);
   });
 });
 
