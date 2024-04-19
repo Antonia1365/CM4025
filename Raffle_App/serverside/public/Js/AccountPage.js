@@ -10,8 +10,10 @@ var currentIndex = 0;
 var currentRaffle = null; // Store the currently displayed raffle i.e chosen by user
 var raffleBoxTitle = document.getElementById('RaffleBoxTitle');
 var raffleItems = document.querySelectorAll('.raffleItem');
+var drawItems = document.querySelectorAll('.drawItem');
 const ticketDropdown = document.getElementById('ticketDropdown');
 const ticketNumberInput = document.getElementById('ticketNumberInput');
+var myDrawsButton = document.getElementById('MyDraws');
 
 if (raffleTaken.css("visibility") === "visible") {
 setTimeout(function () {
@@ -126,6 +128,61 @@ document.getElementById('PrevRaffleBtn').addEventListener('click', function () {
 currentIndex = (currentIndex - 1 + raffleItems.length) % raffleItems.length;
 showRaffle(currentIndex);
 });
+
+
+
+function showDraw(index) {
+
+    // Check if index is within bounds and drawItems is defined
+    if (index >= 0 && index < drawItems.length) {
+        // Hide all draws
+        drawItems.forEach(function (item) {
+            item.style.display = 'none';
+        });
+
+        // Show the draw at the specified index
+        drawItems[index].style.display = 'block';
+
+        // Store the current draw
+        currentDraw = {
+            name: drawItems[index].querySelector('p:nth-of-type(1)').innerText.split(': ')[1],
+            participants: drawItems[index].querySelector('p:nth-of-type(2)').innerText.split(': ')[1],
+        }
+    } else {
+        console.error('Index out of bounds:', index);
+    }
+}
+
+myDrawsButton.addEventListener('click', function () {
+    var accountDetails = document.getElementById('AccountDetails');
+    var carouselContainer = document.getElementById('CarouselContainer2');
+
+    // Toggle visibility of the account details and carousel containers
+    accountDetails.style.display = (accountDetails.style.display === 'none') ? 'block' : 'none';
+    carouselContainer.style.display = (carouselContainer.style.display === 'none') ? 'block' : 'none';
+
+    if (myDrawsButton.innerText === 'My Draws') {
+        myDrawsButton.innerText = 'Back';
+    } else {
+        myDrawsButton.innerText = 'My Draws';
+    }
+
+    // If carousel is made visible, show draws
+    if (carouselContainer.style.display === 'block') {
+        showDraw(currentIndex);
+    }
+});
+
+document.getElementById('NextDrawBtn').addEventListener('click', function () {
+    currentIndex = (currentIndex + 1) % drawItems.length;
+    showDraw(currentIndex);
+});
+
+document.getElementById('PrevDrawBtn').addEventListener('click', function () {
+    currentIndex = (currentIndex - 1 + drawItems.length) % drawItems.length;
+    showDraw(currentIndex);
+});
+
 
 
 // Toggle between ticket dropdown and input field

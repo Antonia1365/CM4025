@@ -103,7 +103,7 @@ font-weight: bold;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    margin-top: 20%;
+    margin-top: 11.8rem;
     font-size: 20px;
 }
 #LeftBox{
@@ -128,6 +128,8 @@ font-weight: bold;
 #SubmitRaffle:hover,
 #CreateRaffle_btn:hover,
 #PrevRaffleBtn:hover,
+#PrevDrawBtn:hover,
+#NextDrawBtn:hover,
 #NextRaffleBtn:hover,
 #Deactivate:hover,
 #LogOut:hover
@@ -156,12 +158,14 @@ font-weight: bold;
     
 }
 
-#CarouselButtons {
+#CarouselButtons, #CarouselButtons2 {
     text-align: center;
 }
 
 #PrevRaffleBtn,
-#NextRaffleBtn {
+#NextRaffleBtn,
+#PrevDrawBtn,
+#NextDrawBtn {
     background-color: transparent;
     border: 5px solid #2353c3;
     border-radius: 50%; 
@@ -171,7 +175,32 @@ font-weight: bold;
     margin-right: 10%;
     cursor: pointer;
 }
+#PrevRaffleBtn,
+#NextRaffleBtn{
+    border: 5px solid #2353c3;
 
+}
+
+#PrevDrawBtn,
+#NextDrawBtn{
+    border: 5px solid rgb(216, 228, 255);
+
+}
+
+
+#PrevDrawBtn::before,
+#NextDrawBtn::before {
+    content: "";
+    display: inline-block;
+    border: solid rgb(216, 228, 255);
+    border-width: 0 2px 2px 0;
+    padding: 3px;
+    transform: rotate(-45deg);
+}
+
+#NextDrawBtn::before {
+    transform: rotate(135deg);
+}
 
 #ChooseTicket, #WriteTicket{
     left: 3vw;
@@ -185,8 +214,28 @@ font-weight: bold;
     top: 30vw;
   }
 
+#MyDraw{
+    max-height: 80%;
+    overflow-y: auto;
+    text-align: left;
+    font-size: 1.2rem;
+}
 .ContainerDetails{
     font-size: 1.1rem;
+}
+
+#CarouselContainer2{
+    margin-top: 13rem;
+
+}
+#CarouselButtons2{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    width: 200%;
+    margin-left: -3rem;
+    
 }
 
 

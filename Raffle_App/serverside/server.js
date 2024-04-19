@@ -388,12 +388,37 @@ function renderAccountPage(res, user, errors) {
       });
     } 
     else if (user.AccountType === "Raffle Participant") {
+ 
+      var filteredDraws = [];
+
+      function filterDraws(draws, username) {
+          const filteredDraws = draws.filter(draw => {
+              const foundParticipant = draw.participants.find(participant => participant.username === username);
+                return foundParticipant !== undefined;
+          });
+        return filteredDraws; 
+    }
+
+    db.collection('draws').find({}).toArray((err, allDraws) => {
+        if (err) {
+            throw err;
+        }
+    
+        // Call the filterDraws function
+        filteredDraws = filterDraws(allDraws, user.Username);
+
+        if (filteredDraws.length === 0) {
+            console.log("No draws found for user");
+        }
+    });
+
       // Get all raffles
       db.collection('raffles').find({}).toArray((err, allRaffles) => {
           if (err) {
               throw err;
           }
           const filteredRaffles = [];
+          
   
           // Counter 
           let processedRafflesCount = 0;
@@ -417,9 +442,12 @@ function renderAccountPage(res, user, errors) {
                   // Check if all raffles have been processed
                   if (processedRafflesCount === allRaffles.length) {
                       // Render the page template with the filtered raffles
+                      console.log("Length: ", filteredDraws.length);
+                      console.log("Draw: ", filteredDraws);
                       res.render('AccountPage', {
                           account: user,
                           raffles: filteredRaffles || [],
+                          draws: filteredDraws || [],
                           luckyNumbers: tickets,
                           errors: errors
                       });

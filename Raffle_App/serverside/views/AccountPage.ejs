@@ -138,6 +138,28 @@
             <p>Raffles Held: <%= raffles.length || 0 %></p>
         <% } %>
         </div>
+
+        <div id="CarouselContainer2" style="display: none;" >
+            <div id="MyDraw" class="ContainerDetails">
+                <% if (draws.length > 0) { %>
+                    <% draws.forEach(function(draw) { %>
+                        <div class="drawItem">
+                            <p>Raffle: <%= draw.raffle.name %></p>
+                            <p>Participants: <%= draw.participants.length %></p>
+                            <p>Ticket: <%= draw.participants.find(participant => participant.username === account.Username).ticket %></p>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No draws available</p>
+                <% } %>
+            </div>
+            <div id="CarouselButtons2">
+                <button id="NextDrawBtn"></button>
+                <button id="PrevDrawBtn"></button>
+            </div>
+        </div>
+
+        <button id="MyDraws" class="submit" type="button">My Draws</button>
 <!--------------------------- Buttons for account deletion/ recovery ----------------->
 <div id="EraseAccount">
     <form action="/logout">
