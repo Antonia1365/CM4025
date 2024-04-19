@@ -248,7 +248,7 @@ function selectWinner(draw) {
               // Send email to non-registered users
       if (winnerParticipant[0].username.length > 0) {  
         const emailRegex = /\S+@\S+\.\S+/;
-        if (emailRegex.test(winnerParticipant.username)) {
+        if (emailRegex.test(winnerParticipant[0].username)) {
           console.log('Winner participant is an email:', winnerParticipant[0].username);
           notifyWinner(winnerParticipant[0].username, winnerTicket);
         } 
