@@ -65,7 +65,7 @@ raffleBoxTitle.textContent = "Raffles Held";
 });
 
 
-
+if(currentRaffle){
 $('#EnterRaffle_btn').click(function () {
 
 $("#EnterRaffle").css("display", "block");
@@ -82,6 +82,10 @@ $('#currentRaffleInput').val(JSON.stringify(currentRaffle));
 // Send it along with the user details to the participation logic 
 //console.log("EnterRaffle");
 });
+}
+else{
+    $("#EnterRaffle_btn").css("display", "none");
+}
 
 
 $('#BackToRaffleList').click(function () {
@@ -102,6 +106,10 @@ $("#WriteTicket").css("visibility", "hidden");
 
 function showRaffle(index) {
 // Hide all raffles
+
+    // Check if index is within bounds and drawItems is defined
+    if (index >= 0 && index < raffleItems.length) {
+    
     raffleItems.forEach(function (item) {
     item.style.display = 'none';
     });
@@ -115,26 +123,33 @@ function showRaffle(index) {
         prize: raffleItems[index].querySelector('p:nth-of-type(2)').innerText.split(': ')[1],
         drawDate: raffleItems[index].querySelector('p:nth-of-type(3)').innerText.split(': ')[1],
     }
+ } else{
+    console.error('Index out of bounds:', index);
+ }
 }
 
 showRaffle(currentIndex);
+if(currentRaffle){
 $('#raffleName').val(JSON.stringify(currentRaffle.name));
 $('#raffleNameTrigger').val(JSON.stringify(currentRaffle.name));
-
+}
 
 document.getElementById('NextRaffleBtn').addEventListener('click', function () {
 currentIndex = (currentIndex + 1) % raffleItems.length;
 showRaffle(currentIndex);
+if(currentRaffle){
 $('#raffleName').val(JSON.stringify(currentRaffle.name));
 $('#raffleNameTrigger').val(JSON.stringify(currentRaffle.name));
-
+}
 });
 
 document.getElementById('PrevRaffleBtn').addEventListener('click', function () {
 currentIndex = (currentIndex - 1 + raffleItems.length) % raffleItems.length;
 showRaffle(currentIndex);
+if(currentRaffle){
 $('#raffleName').val(JSON.stringify(currentRaffle.name));
 $('#raffleNameTrigger').val(JSON.stringify(currentRaffle.name));
+}
 });
 
 
@@ -155,6 +170,7 @@ function showDraw(index) {
         currentDraw = {
             name: drawItems[index].querySelector('p:nth-of-type(1)').innerText.split(': ')[1],
             participants: drawItems[index].querySelector('p:nth-of-type(2)').innerText.split(': ')[1],
+            winner: drawItems[index].querySelector('p:nth-of-type(3)').innerText.split(': ')[1]
         }
     } else {
         console.error('Index out of bounds:', index);
@@ -165,7 +181,7 @@ myDrawsButton.addEventListener('click', function () {
     var accountDetails = document.getElementById('AccountDetails');
     var carouselContainer = document.getElementById('CarouselContainer2');
     var exitDrawBtn = document.getElementById('ExitDraw');
-
+    
     // Toggle visibility of the account details and carousel containers
     accountDetails.style.display = (accountDetails.style.display === 'none') ? 'block' : 'none';
     carouselContainer.style.display = (carouselContainer.style.display === 'none') ? 'block' : 'none';
@@ -180,11 +196,17 @@ myDrawsButton.addEventListener('click', function () {
 
     // If carousel is made visible, show draws
     if (carouselContainer.style.display === 'block') {
+        if(currentDraw){
         exitDrawBtn.style.display = 'block';
         showDraw(currentIndex);
         $('#currentDraw').val(JSON.stringify(currentDraw));
         //console.log("Showing draw: ", currentDraw);
     }
+    else{
+        exitDrawBtn.style.display = 'none';
+      } 
+  }
+  
 });
 
 document.getElementById('NextDrawBtn').addEventListener('click', function () {

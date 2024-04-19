@@ -147,6 +147,14 @@
                             <p>Raffle: <%= draw.raffle.name %></p>
                             <p>Participants: <%= draw.participants.length %></p>
                             <p>Ticket: <%= draw.participants.find(participant => participant.username === account.Username).ticket %></p>
+                            <% if (draw.winner > 0) { %>
+                            <p>Prize avaliable to claim: <%= draw.raffle.prize %></p>
+                            
+                            <form action="/claimReward" method="post">
+                                <input type="hidden" id="currentDrawClaim" name="CurrentDrawClaim" value="<%= draw.raffle.name %>" />
+                                <button id="CaimPrize" class="Leave" type="submit">Claim Prize</button>
+                            </form>
+                            <% } %>
                         </div>
                     <% }); %>
                 <% } else { %>

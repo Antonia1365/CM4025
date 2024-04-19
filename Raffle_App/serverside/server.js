@@ -478,6 +478,49 @@ app.post('/deleteRaffle', (req, res) => {
 });
 
 
+
+// Function to delete a raffle and its associated draw
+function deleteRaffleAndDraw(raffleName, res, obj) {
+  // Delete the raffle from the raffles collection
+  db.collection('raffles').deleteOne({ "name": raffleName }, (err, raffleResult) => {
+    if (err) {
+      console.log('Error deleting raffle:', err);
+      renderAccountPage(res, obj, 'Error deleting raffle: ' + err);
+      return;
+    }
+
+    // Delete the associated draw from the draws collection
+    db.collection('draws').deleteOne({ "raffle.name": raffleName }, (err, drawResult) => {
+      if (err) {
+        console.log('Error deleting draw:', err);
+        renderAccountPage(res, obj, 'Error deleting draw: ' + err);
+        return;
+      }
+
+      // Check if both deletion operations were successful
+      if (raffleResult.deletedCount === 1 && drawResult.deletedCount === 1) {
+        console.log('Raffle and associated draw deleted successfully');
+        renderAccountPage(res, obj, 'Reward claimed successfully');
+      } else {
+        console.log('Failed to delete raffle or associated draw');
+        renderAccountPage(res, obj, 'Failed to claim reward');
+      }
+    });
+  });
+}
+
+app.post('/claimReward', (req, res) => {
+  //const raffleName = req.body.currentDrawClaim.replace(/"/g, ''); 
+  const raffleName = req.body.CurrentDrawClaim 
+  console.log('Claiming prize for raffle:', raffleName);
+
+  deleteRaffleAndDraw(raffleName, res, obj);
+});
+
+
+
+
+
 app.post('/triggerDraw', (req, res) => {
   const raffleId = req.body.raffleIdTrigger.replace(/"/g, '');;
   console.log('Triggering draw for raffle:', raffleId);	
