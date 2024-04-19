@@ -118,16 +118,23 @@ function showRaffle(index) {
 }
 
 showRaffle(currentIndex);
+$('#raffleName').val(JSON.stringify(currentRaffle.name));
+$('#raffleNameTrigger').val(JSON.stringify(currentRaffle.name));
 
 
 document.getElementById('NextRaffleBtn').addEventListener('click', function () {
 currentIndex = (currentIndex + 1) % raffleItems.length;
 showRaffle(currentIndex);
+$('#raffleName').val(JSON.stringify(currentRaffle.name));
+$('#raffleNameTrigger').val(JSON.stringify(currentRaffle.name));
+
 });
 
 document.getElementById('PrevRaffleBtn').addEventListener('click', function () {
 currentIndex = (currentIndex - 1 + raffleItems.length) % raffleItems.length;
 showRaffle(currentIndex);
+$('#raffleName').val(JSON.stringify(currentRaffle.name));
+$('#raffleNameTrigger').val(JSON.stringify(currentRaffle.name));
 });
 
 
@@ -225,6 +232,22 @@ if (document.getElementById("DeleteRaffle_btn")) {
 
         // Set the value of the hidden input field with the name of the current raffle
         document.getElementById("raffleName").value = currentRaffleName;
+        
+    });
+}
+
+// Add an event listener to the "Delete Raffle" button
+if (document.getElementById("TriggerDraw_btn")) {
+    // Add an event listener to the "Delete Raffle" button
+    document.getElementById("TriggerDraw_btn").addEventListener("click", function(event) {
+        // Get the name of the current raffle being displayed in the carousel
+        var currentRaffleName = currentRaffle.name;
+
+        // Set the value of the hidden input field with the name of the current raffle
+        document.getElementById("raffleNameTrigger").value = currentRaffleName;
+        console.log('Current raffle: ' + currentRaffleName);
+        console.log("Triggering draw for raffle: " + document.getElementById("raffleNameTrigger").value);
+        
     });
 }
 

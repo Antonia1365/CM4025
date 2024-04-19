@@ -70,7 +70,7 @@
         </form>
 
         <form action="/triggerDraw" method="POST">
-            <input type="hidden" name="raffleId" value="<%= raffles._id %>">
+            <input type="hidden" id="raffleNameTrigger" name="raffleIdTrigger" value="">
             <button id="TriggerDraw_btn" class="submit" type="submit" style="margin-top: 1vw;">Trigger a Draw</button>
         </form>
 
@@ -138,7 +138,7 @@
             <p>Raffles Held: <%= raffles.length || 0 %></p>
         <% } %>
         </div>
-
+    <% if (account.AccountType === "Raffle Participant") { %>
         <div id="CarouselContainer2" style="display: none;" >
             <div id="MyDraw" class="ContainerDetails">
                 <% if (draws.length > 0) { %>
@@ -166,6 +166,7 @@
             <button id="ExitDraw" class="Leave" type="submit" style="display: none;">Exit Draw</button>
         </form>
     </div>
+    <% } %>
 <!--------------------------- Buttons for account deletion/ recovery ----------------->
 <div id="EraseAccount">
     <form action="/logout">

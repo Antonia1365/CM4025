@@ -158,6 +158,107 @@ app.post('/signup', (req, res) => {
 });
 
 
+
+//----------------------------------------------------------------------------
+const calculateLuckyNumbers = async () => {
+  // Query the draw collection to retrieve all the winning numbers
+  const draws = await db.collection('draws').find({ winner: { $exists: true } }).toArray();
+  //console.log("Draws" + draws.winner);
+  // Count the occurrences of each digit
+  const digitCounts = {};
+  var winningNumber = 0;
+  draws.forEach(draw => {
+    if (draw.winner !== 0) {
+        winningNumber = draw.winner.toString();
+    } 
+    else {
+        // Default to 6 random digits
+        winningNumber = '';
+        for (let i = 0; i < 6; i++) {
+            winningNumber += Math.floor(Math.random() * 10); // Generate random digit between 0 and 9
+        }
+    }
+    for (let i = 0; i < winningNumber.length; i++) {
+        const digit = winningNumber.charAt(i);
+        digitCounts[digit] = (digitCounts[digit] || 0) + 1;
+    }
+});
+
+  // Determine the 6 most frequently occurring digits
+  const sortedDigits = Object.keys(digitCounts).sort((a, b) => digitCounts[b] - digitCounts[a]).slice(0, 6);
+  //console.log(sortedDigits);
+
+  // Store these digits in the luckyNumbers collection
+  await db.collection('luckyNumbers').deleteMany({}); // Clear existing lucky numbers
+  await db.collection('luckyNumbers').insertMany(sortedDigits.map(digit => ({ digit, count: digitCounts[digit] })));
+  //console.log('Lucky numbers updated');
+};
+
+// Call the function to calculate lucky numbers periodically
+setInterval(calculateLuckyNumbers, 120000); // 5 sec (5000) for testing, 2 min (120000) for final
+
+
+/*-----------------------------------------------------------------------*/
+// Function to select a winner for a draw
+var winnerTicket = 0;
+function selectWinner(draw) {
+  return new Promise((resolve, reject) => {
+    // Check if the draw has no winner and has participants
+    if (draw.winner === 0 && draw.participants.length > 0) {
+      // Randomly select a participant's ticket
+      const winningTicket = parseInt(draw.participants[Math.floor(Math.random() * draw.participants.length)].ticket);
+      // Update the draw with the winning ticket
+      winnerTicket = winningTicket;
+
+      db.collection('draws').updateOne(
+        { _id: draw._id },
+        { $set: { winner: winningTicket } },
+        (err, result) => {
+          if (err) {
+            console.log('Error updating draw with winner:', err);
+            return reject(err);
+          }
+          console.log("Winner " + winningTicket + " selected and updated successfully: " + draw.raffle.name);
+          
+          // Query participants whose ticket doesn't equal the winning ticket
+          db.collection('draws').findOne({ _id: draw._id }, (err, updatedDraw) => {
+            if (err) {
+              console.log('Error finding draw:', err);
+              return reject(err);
+            }
+            // Update the draw with the winner
+            if (updatedDraw && updatedDraw.participants) {
+              const winnerParticipant = updatedDraw.participants.filter(participant => participant.ticket == winningTicket.toString());
+
+              console.log('Winner:', winnerParticipant);
+              // Remove the loser participants
+              db.collection('draws').updateOne(
+                { _id: draw._id },
+                { $set: { participants: winnerParticipant } },
+                (err, result) => {
+                  if (err) {
+                    console.log('Error removing losing participants:', err);
+                    return reject(err);
+                  }
+                  console.log('Losing participants removed from the draw.');
+                  resolve();
+                }
+              );
+            }
+          });
+        }
+      );
+    } else {
+      console.log('Draw already has a winner or no participants.');
+      resolve();
+    }
+  });
+}
+//----------------------------------------------------------------------------
+
+
+
+
 var obj = "";  //will store the currently logged in user
 app.post('/dologin', function (req, res) {
   var Username = req.body.Username;
@@ -309,7 +410,7 @@ app.post('/createRaffle', (req, res) => {
 
 // Endpoint to handle deleting a raffle
 app.post('/deleteRaffle', (req, res) => {
-  const raffleId = req.body.raffleNameInput;
+  const raffleId = req.body.raffleNameInput.replace(/"/g, '');
   console.log(raffleId);
 
   db.collection('draws').findOne({ "raffle.name": raffleId }, (err, draw) => {
@@ -334,7 +435,7 @@ app.post('/deleteRaffle', (req, res) => {
       return;
     }
     else{
-      //console.log(result);
+      console.log(result);
       console.log('Raffle ' + raffleId + ' deleted successfully');
       renderAccountPage(res, obj, 'Raffle deleted successfully');
     }    
@@ -343,6 +444,47 @@ app.post('/deleteRaffle', (req, res) => {
 });
     
 });
+
+
+app.post('/triggerDraw', (req, res) => {
+  const raffleId = req.body.raffleIdTrigger.replace(/"/g, '');;
+  console.log('Triggering draw for raffle:', raffleId);	
+  // Find the draw for the specified raffle
+  db.collection('draws').findOne({ "raffle.name": raffleId }, (err, draw) => {
+    if (err) {
+      console.log('System Error');
+      renderAccountPage(res, obj, 'System Error');
+      return;
+    } 
+    else if (!draw) {
+      console.log('No draw found for the specified raffle.');
+      renderAccountPage(res, obj, 'No draw found for the specified raffle.');
+      return;
+    } 
+    else if (draw.participants.length === 0) {
+      console.log('Cannot trigger draw. No participants for the raffle.');
+      renderAccountPage(res, obj, 'Cannot trigger draw. No participants for the raffle.');
+      return;
+    } 
+    else {
+      // Trigger the draw
+      selectWinner(draw)
+        .then(() => {
+          console.log('Draw triggered successfully.');
+          // Render the account page or send a response as needed
+          renderAccountPage(res, obj, 'Draw triggered successfully.');
+        })
+        .catch((error) => {
+          console.error('Error triggering draw:', error);
+          // Render the account page or send a response with the error message
+          renderAccountPage(res, obj, 'Error triggering draw: ' + error);
+        });
+    }
+  });
+});
+
+
+
 
 
 
@@ -574,7 +716,7 @@ app.post('/exitDraw', (req, res) => {
   const username = req.session.currentuser; // Keep Username to differentiate account holders
   const currentDraw = JSON.parse(req.body.CurrentDraw);
   //console.log("Draw: " + currentDraw.name + " END DRAW");
-  console.log("User: "+username);
+  //console.log("User: "+username);
  
  db.collection('draws').updateOne(
   { "raffle.name": currentDraw.name }, // Draw is identified by the raffle name
@@ -600,101 +742,6 @@ app.post('/exitDraw', (req, res) => {
 
 // Lucky numbers collection updates
 // Calculate the numbers most commong among draw winners and update the lucky numbers collection
-
-const calculateLuckyNumbers = async () => {
-  // Query the draw collection to retrieve all the winning numbers
-  const draws = await db.collection('draws').find({ winner: { $exists: true } }).toArray();
-  //console.log("Draws" + draws.winner);
-  // Count the occurrences of each digit
-  const digitCounts = {};
-  var winningNumber = 0;
-  draws.forEach(draw => {
-    if (draw.winner !== 0) {
-        winningNumber = draw.winner.toString();
-    } 
-    else {
-        // Default to 6 random digits
-        winningNumber = '';
-        for (let i = 0; i < 6; i++) {
-            winningNumber += Math.floor(Math.random() * 10); // Generate random digit between 0 and 9
-        }
-    }
-    for (let i = 0; i < winningNumber.length; i++) {
-        const digit = winningNumber.charAt(i);
-        digitCounts[digit] = (digitCounts[digit] || 0) + 1;
-    }
-});
-
-  // Determine the 6 most frequently occurring digits
-  const sortedDigits = Object.keys(digitCounts).sort((a, b) => digitCounts[b] - digitCounts[a]).slice(0, 6);
-  //console.log(sortedDigits);
-
-  // Store these digits in the luckyNumbers collection
-  await db.collection('luckyNumbers').deleteMany({}); // Clear existing lucky numbers
-  await db.collection('luckyNumbers').insertMany(sortedDigits.map(digit => ({ digit, count: digitCounts[digit] })));
-  //console.log('Lucky numbers updated');
-};
-
-// Call the function to calculate lucky numbers periodically
-setInterval(calculateLuckyNumbers, 120000); // 5 sec (5000) for testing, 2 min (120000) for final
-
-
-/*-----------------------------------------------------------------------*/
-// Function to select a winner for a draw
-var winnerTicket = 0;
-function selectWinner(draw) {
-  return new Promise((resolve, reject) => {
-    // Check if the draw has no winner and has participants
-    if (draw.winner === 0 && draw.participants.length > 0) {
-      // Randomly select a participant's ticket
-      const winningTicket = parseInt(draw.participants[Math.floor(Math.random() * draw.participants.length)].ticket);
-      // Update the draw with the winning ticket
-      winnerTicket = winningTicket;
-
-      db.collection('draws').updateOne(
-        { _id: draw._id },
-        { $set: { winner: winningTicket } },
-        (err, result) => {
-          if (err) {
-            console.log('Error updating draw with winner:', err);
-            return reject(err);
-          }
-          console.log("Winner " + winningTicket + " selected and updated successfully: " + draw.raffle.name);
-          
-          // Query participants whose ticket doesn't equal the winning ticket
-          db.collection('draws').findOne({ _id: draw._id }, (err, updatedDraw) => {
-            if (err) {
-              console.log('Error finding draw:', err);
-              return reject(err);
-            }
-            // Update the draw with the winner
-            if (updatedDraw && updatedDraw.participants) {
-              const winnerParticipant = updatedDraw.participants.filter(participant => participant.ticket == winningTicket.toString());
-
-              console.log('Winner:', winnerParticipant);
-              // Remove the loser participants
-              db.collection('draws').updateOne(
-                { _id: draw._id },
-                { $set: { participants: winnerParticipant } },
-                (err, result) => {
-                  if (err) {
-                    console.log('Error removing losing participants:', err);
-                    return reject(err);
-                  }
-                  console.log('Losing participants removed from the draw.');
-                  resolve();
-                }
-              );
-            }
-          });
-        }
-      );
-    } else {
-      console.log('Draw already has a winner or no participants.');
-      resolve();
-    }
-  });
-}
 
 
 // Choose a random winner for a draw 
