@@ -48,8 +48,6 @@
 
 
     <% if (account.AccountType === "Raffle Holder") { %>
-        <button id="CreateRaffle_btn" class="submit" type="submit">Create a Raffle</button>
-
         <div id = "CreateRaffle" class="ContainerDetails" style="display: none;" >
             <form action="/createRaffle" method="POST">
                 <input class="createForms"  type="text" name="name" placeholder="Raffle Name (up to 10 chars)" maxlength="10" pattern="[a-zA-Z0-9]{1,10}" required>
@@ -57,9 +55,25 @@
                 <input class="createForms"  type="date" name="drawDate" placeholder="Draw Date" required>
                 <button id="DisplayRaffles" class="submit" type="button">My Raffles</button>
                 <button id="SubmitRaffle" class="submit" type="submit">Create Raffle</button>
-                
             </form>
             
+        </div>
+        <div id="MiniButtonBox" style= "display: flex; flex-direction: row; justify-content: center; align-items: center;" >
+            <input type="hidden" id="currentRaffleInput" name="CurrentRaffle" />
+
+            <button id="CreateRaffle_btn" type="submit">Creat a Raffle</button>
+        
+             <!-- Form for deleting the raffle -->
+        <form action="/deleteRaffle" method="POST">
+            <input type="hidden"  id="raffleName" name="raffleNameInput" value="">
+            <button id="DeleteRaffle_btn" type="submit">Delete Raffle</button>
+        </form>
+
+        <form action="/triggerDraw" method="POST">
+            <input type="hidden" name="raffleId" value="<%= raffles._id %>">
+            <button id="TriggerDraw_btn" class="submit" type="submit" style="margin-top: 1vw;">Trigger a Draw</button>
+        </form>
+
         </div>
         <% } else { %>
             <button id="EnterRaffle_btn" class="submit" type="submit">Enter Raffle</button>

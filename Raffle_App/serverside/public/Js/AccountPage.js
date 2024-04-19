@@ -36,6 +36,9 @@ $("#MyRaffle").css("display", "none");
 $("#CreateRaffle_btn").css("display", "none");
 $("#PrevRaffleBtn").css("display", "none");
 $("#NextRaffleBtn").css("display", "none");
+$("#DeleteRaffle_btn").css("display", "none");
+$("#TriggerDraw_btn").css("display", "none");
+
 
 //console.log("CreateRaffle");
 raffleBoxTitle.textContent = "Create a new Raffle";
@@ -49,6 +52,9 @@ $("#MyRaffle").css("display", "block");
 $("#CreateRaffle_btn").css("display", "block");
 $("#PrevRaffleBtn").css("display", "inline-block");
 $("#NextRaffleBtn").css("display", "inline-block");
+
+$("#DeleteRaffle_btn").css("display", "inline-block");
+$("#TriggerDraw_btn").css("display", "inline-block");
 
 raffleBoxTitle.textContent = "Raffles Held";
 //console.log("DisplayRaffles");
@@ -143,6 +149,17 @@ function disableTicketDropdown() {
 $('#ChooseTicket').click( disableTicketNumberInput);
 $('#WriteTicket').click(disableTicketDropdown);
 
+// Add an event listener to the "Delete Raffle" button
+if (document.getElementById("DeleteRaffle_btn")) {
+    // Add an event listener to the "Delete Raffle" button
+    document.getElementById("DeleteRaffle_btn").addEventListener("click", function(event) {
+        // Get the name of the current raffle being displayed in the carousel
+        var currentRaffleName = currentRaffle.name;
+
+        // Set the value of the hidden input field with the name of the current raffle
+        document.getElementById("raffleName").value = currentRaffleName;
+    });
+}
 
 
 // User enters an active raffle

@@ -278,14 +278,7 @@ app.post('/createRaffle', (req, res) => {
 
       // Generate 10 unique verification codes for tickets
       // Update, user writes their ticket
-          
-      /*
-      const tickets = [];
-      while (tickets.length < 10) {
-          const newTicket = generateUniqueTicket(tickets);
-          tickets.push(newTicket);
-      }
-      */
+
       // Create a new raffle object
       const newRaffle = {
           name: name,
@@ -310,6 +303,45 @@ app.post('/createRaffle', (req, res) => {
           renderAccountPage(res, obj, 'Raffle created successfully');
       });
   });
+});
+
+
+
+// Endpoint to handle deleting a raffle
+app.post('/deleteRaffle', (req, res) => {
+  const raffleId = req.body.raffleNameInput;
+  console.log(raffleId);
+
+  db.collection('draws').findOne({ "raffle.name": raffleId }, (err, draw) => {
+    if (err) {
+      console.log('System Error');
+      renderAccountPage(res, obj, err);
+      return;
+    }
+    else if(draw){
+      console.log('Cannot delete raffle. A draw has already started.');
+      renderAccountPage(res, obj, 'Cannot delete raffle. A draw has already started.');
+      return;
+    }
+    else{
+  // Delete the raffle from the collection
+  db.collection('raffles').deleteOne({ 
+    "name": raffleId
+  }, function (err, result) {
+    if (err) {
+      console.log('System Error');
+      renderAccountPage(res, obj, err);
+      return;
+    }
+    else{
+      //console.log(result);
+      console.log('Raffle ' + raffleId + ' deleted successfully');
+      renderAccountPage(res, obj, 'Raffle deleted successfully');
+    }    
+  });
+  }
+});
+    
 });
 
 
