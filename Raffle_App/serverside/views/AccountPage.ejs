@@ -93,7 +93,7 @@
  
                     <p id="ChooseTicketTitle"> Or create your own </p>
                     <div id="WriteTicket" class="Hint"></div>
-                    <input id="ticketNumberInput" class="createForms" type="text" placeholder="Ticket Number:" name="TicketNumber" required pattern="[0-9]{6}" title="Enter 6 digits from 0 to 9"/>
+                    <input id="ticketNumberInput" class="createForms" type="text" placeholder="Ticket Number:" name="TicketNumber" required pattern="[1-9]{6}" title="Enter 6 digits from 0 to 9"/>
                     <!-- Hidden input field for storing the ticket the user chose -->
                     <input type="hidden" id="activeInputValue" name="activeInputValue">
                     <input type="hidden" id="currentRaffleInput" name="CurrentRaffle" />
@@ -132,9 +132,8 @@
             <p>Email: <%= account.Email %></p>
             <p>Account Type: <%= account.AccountType %></p>
                     <!-- Display different information based on account type -->
-        <% if (account.AccountType === 'Raffle Participant') { %>
-            <p>Unclaimed Prizes: 0</p>
-        <% } else if (account.AccountType === 'Raffle Holder') { %>
+    
+        <% if (account.AccountType === 'Raffle Holder') { %>
             <p>Raffles Held: <%= raffles.length || 0 %></p>
         <% } %>
         </div>

@@ -42,7 +42,7 @@
             <% if (raffles.length > 0) { %>
                 <% raffles.forEach(function(raffle) { %>
                     <!--- Display one Raffle at a time -->
-                    <div class="raffleItem"">
+                    <div class="raffleItem">
                         <p>Raffle: <%= raffle.name %></p>
                         <p>Prize: <%= raffle.prize %>£</p>
                         <p>Date of Draw: <%= new Date(raffle.drawDate).toDateString() %></p>
@@ -65,7 +65,7 @@
 <div id="RaffleSignup" class="Forms">
     <p id="TitleParticipate" class="title"> Enter as a Guest </p>
     <form action= '/RaffleSignup' method='POST'>
-        <input class="createForms" type="text" placeholder="Ticket Number:" name="TicketNumber" required pattern="[0-9]{6}" title="Enter 6 digits from 0 to 9"/>
+        <input class="createForms" type="text" placeholder="Ticket Number:" name="TicketNumber" required pattern="[1-9]{6}" title="Enter 6 digits from 0 to 9"/>
         <input class="createForms" type="email" placeholder="Email:" name="Email" required pattern="\S+"/>
         <!--- Hidden input to send the Raffle details along with the user details -->
         <input type="hidden" id="currentRaffleInput" name="CurrentRaffle" />

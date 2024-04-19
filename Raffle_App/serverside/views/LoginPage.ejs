@@ -34,21 +34,21 @@
     </div>
     <!------------------------ Input forms for signing up -------------------->
     <div id="RaffleSignup" class="Forms">
-        <form action= '/RaffleSignup' method='POST'>
-            <input class="createForms" type="text" placeholder="Username:" name="Username" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}"
-                   title="One number, uppercase and lowercase letters. At least 7 or more characters total" required>
+        <form action= '/claimRewardGuest' method='POST'>
+            <input class="createForms" type="text" placeholder="Ticket Number:" name="TicketNumber" required pattern="[1-9]{6}" title="Enter 6 digits from 0 to 9"/>
             <input class="createForms" type="email" placeholder="Email:" name="Email" required pattern="\S+"/>
             </div>
-            <button id="EnterGuestRaffle" class="submit" type="submit">Enter Raffle</button>
+            <button id="ClaimGuest" class="submit" type="submit">Claim your prize</button>
             </form>
          
     <!--- Hint box explaining username requirements appears on mouse hover over white circle --->
     <div id="RaffleNameHint" class="Hint"></div>
     <div id="RaffleNameHintBox" class="HintBox">
         <ul>
-            <li class="HintList">Minimum of 5 characters.</li>
-            <li class="HintList">At least one letter.</li>
-            <li class="HintList">At least number.</li>
+            <li class="HintList">For unregistered users:</li>
+            <li class="HintList">To claim a reward,</li>
+            <li class="HintList">enter your email and ticket details</li>
+            <li class="HintList">you participated with.</li>
         </ul>
     </div>
 
@@ -122,14 +122,7 @@
 <% if (locals.errors) { %>
     <div id="UsernameTaken" class="HintBox" style="visibility: visible;">
     <ul class="taken">
-        <% if (errors === "Username taken") { %>
-            <li  class="HintList">Username already exists</li>
-        <% } %>  
-            <% if (errors === "Account created") { %>
-              <li  class="HintList">Account created!<br>You can now Login</li>
-            <% }  else { %>
-              <li  class="HintList">Wrong password!</li>
-            <% } %>
+        <li class="HintList"><%= errors %></li>
     </ul>
     </div>
  <% } %>

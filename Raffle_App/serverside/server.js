@@ -49,7 +49,7 @@ function renderMainPage(req, res, errors) {
       if (err) {
           throw err;
       }
-
+      console.log(allRaffles.length);
       // Array to store filtered raffles
       const filteredRaffles = [];
 
@@ -519,6 +519,49 @@ app.post('/claimReward', (req, res) => {
 
 
 
+app.post('/claimRewardGuest', (req, res) => {
+  const { TicketNumber, Email } = req.body;
+
+  // Find the draw where the ticket number and email match a single participant
+  db.collection('draws').findOne({
+      "participants": { $elemMatch: { "username": Email, "ticket": TicketNumber } }
+  }, (err, draw) => {
+      if (err) {
+          console.log('Error finding draw:', err);
+          res.render("LoginPage", {
+            errors: "Internal Error"
+          })
+          return;
+      }
+
+      if (!draw) {
+        console.log('Draw not found for provided ticket number and email');
+        res.render("LoginPage", {
+          errors: "Draw not found for provided ticket number and email"
+        })
+          return; 
+      }
+
+      // Check if the draw's winner matches the provided ticket number
+      if (draw.winner !== parseInt(TicketNumber)) {
+        res.render("LoginPage", {
+          errors: " Ticket number does not match draw winner"
+        })
+        return;
+          
+      }
+
+      // Retrieve the raffle name associated with the draw
+      const raffleName = draw.raffle.name;
+
+      // Delete the raffle and draw associated with the provided raffle name
+      deleteRaffleAndDraw(raffleName, res, obj);
+  });
+});
+
+
+
+
 
 
 app.post('/triggerDraw', (req, res) => {
@@ -707,6 +750,12 @@ function EnterRaffle(username, currentRaffle, ticket, req, res, callback) {
             callback("You have already entered this draw");  
             return;
         }
+        if (existingDraw.participants.some(participant => participant.ticket === ticket)) {
+          // Username already exists in the participants array, display error message
+          console.log('Ticket already exists in participants array');
+          callback("This ticket is already taken");  
+          return;
+      }
 
         // Add the new participant to the participants array with the chosen ticket
         db.collection('draws').updateOne(

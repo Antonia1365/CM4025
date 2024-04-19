@@ -65,7 +65,7 @@ raffleBoxTitle.textContent = "Raffles Held";
 });
 
 
-if(currentRaffle){
+if(raffleItems){
 $('#EnterRaffle_btn').click(function () {
 
 $("#EnterRaffle").css("display", "block");
@@ -84,6 +84,7 @@ $('#currentRaffleInput').val(JSON.stringify(currentRaffle));
 });
 }
 else{
+    console.log("No raffle selected: " + currentRaffle);
     $("#EnterRaffle_btn").css("display", "none");
 }
 
@@ -196,7 +197,7 @@ myDrawsButton.addEventListener('click', function () {
 
     // If carousel is made visible, show draws
     if (carouselContainer.style.display === 'block') {
-        if(currentDraw){
+        if(drawItems){
         exitDrawBtn.style.display = 'block';
         showDraw(currentIndex);
         $('#currentDraw').val(JSON.stringify(currentDraw));
